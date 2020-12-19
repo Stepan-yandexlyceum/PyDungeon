@@ -1,8 +1,9 @@
 from settings import *
+from Character import *
 import pygame
 
 
-class Player:
+class Player(Character):
     def __init__(self):
         self.x, self.y = player_pos
 
