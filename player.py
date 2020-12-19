@@ -23,3 +23,12 @@ class Player(Character):
             self.y += -1
         if keys[pygame.K_d]:
             self.x += 1
+
+        if keys[pygame.K_DOWN]:
+            self.y += 1
+        if keys[pygame.K_LEFT]:
+            self.x += -1
+        if keys[pygame.K_UP]:
+            self.y += -1
+        if keys[pygame.K_RIGHT]:
+            self.x += 1
