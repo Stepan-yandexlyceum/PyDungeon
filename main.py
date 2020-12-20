@@ -3,11 +3,10 @@ import os
 import sys
 from settings import *
 from player import Player
-#from map import world_map
+from map import text_map
 from Character import Character
 from Armor import Armor
 from Enemy import Enemy
-
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
