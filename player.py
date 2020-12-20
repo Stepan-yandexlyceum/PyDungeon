@@ -4,7 +4,8 @@ import pygame
 
 
 class Player(Character):
-    def __init__(self):
+    def __init__(self, weapon, armor):
+        super().__init__(weapon, armor)
         self.x, self.y = player_pos
 
     @property
