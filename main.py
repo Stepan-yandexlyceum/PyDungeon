@@ -6,13 +6,12 @@ from player import Player
 from map import text_map
 from Character import Character
 from Armor import Armor
+from Weapon import Weapon
 from Enemy import Enemy
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
-# создание игрока
-#player = Player()
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -23,44 +22,29 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
-
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
 
-# создадим спрайт
-player_sprite = pygame.sprite.Sprite()
-# определим его вид
-player_sprite.image = load_image("Knight_01__IDLE_000.png")
-# и размеры
-# TODO: подогнать спрайт игрока под сетку и отрегулировать перемещение в квадратиках
-player_sprite.image = pygame.transform.scale(player_sprite.image, (100, 100))
-player_sprite.rect = player_sprite.image.get_rect()
+# создадим начальное снаряжение для игрока (потом переденесем в БД, но потом)
+wooden_baton = Weapon("деревянная дубина", 3, 2)
+leather_cuirass = Armor("кожаная кираса", 0, 1)
 
-# добавим спрайт в группу
-all_sprites.add(player_sprite)
+# создадим игрока
+hero = Player(wooden_baton, leather_cuirass, sc, all_sprites)
 
 running = True
 # основной цикл отрисовки
 while True:
     for event in pygame.event.get():
         sc.fill((0, 0, 0))
-        a, b = 0, 0
+
+        a, b = 0, 0 # что это? а как же осмысленные имена переменных?
+
         if event.type == pygame.QUIT:
             running = False
-        # if event.type == pygame.MOUSEMOTION:
-        #     x, y = event.pos[0], event.pos[1]
-        #     screen.fill((0, 0, 0))
-        #     sprite.rect.x = x
-        #     sprite.rect.y = y
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                player_sprite.rect.y += -10
-            if event.key == pygame.K_a:
-                player_sprite.rect.x += -10
-            if event.key == pygame.K_s:
-                player_sprite.rect.y += 10
-            if event.key == pygame.K_d:
-                player_sprite.rect.x += 10
+        
+        # движение игрока
+        hero.movement()
 
     all_sprites.draw(sc)
     pygame.display.flip()

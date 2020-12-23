@@ -4,32 +4,33 @@ import pygame
 
 
 class Player(Character):
-    def __init__(self, weapon, armor):
-        super().__init__(weapon, armor)
-        self.x, self.y = player_pos
+    image = pygame.image.load("data/Knight_01__IDLE_000.png")
+    image = pygame.transform.scale(image, (150, 150))
 
-    @property
-    def pos(self):
-        return self.x, self.y
+    def __init__(self, weapon, armor, screen, sprites):
+        super().__init__(weapon, armor, sprites)
+        self.x, self.y = player_pos
+        self.rect = self.image.get_rect()
+
 
     def movement(self):
         keys = pygame.key.get_pressed()
 
         # управление игроком производится клавишами w,a,s,d
         if keys[pygame.K_w]:
-            self.y += 1
+            self.rect.y += 10
         if keys[pygame.K_a]:
-            self.x += -1
+            self.rect.x -= 10
         if keys[pygame.K_s]:
-            self.y += -1
+            self.rect.y -= 10
         if keys[pygame.K_d]:
-            self.x += 1
+            self.rect.x += 10
 
         if keys[pygame.K_DOWN]:
-            self.y += 1
+            self.rect.y += 10
         if keys[pygame.K_LEFT]:
-            self.x += -1
+            self.rect.x -= 10
         if keys[pygame.K_UP]:
-            self.y += -1
+            self.rect.y -= 10
         if keys[pygame.K_RIGHT]:
-            self.x += 1
+            self.rect.x += 10
