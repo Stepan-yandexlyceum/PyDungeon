@@ -15,6 +15,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     # если файл не существует, то выходим
@@ -24,6 +25,7 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
+texture_wall = load_image("textures_dungeon_001.png")
 
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
@@ -49,7 +51,7 @@ while True:
     for i in range(map_height):
         for j in range(map_width):
             if text_map[i][j] == 'w':
-                pygame.draw.rect(sc, pygame.Color('grey'), (32*i, 32*j, 32, 32))
+                sc.blit(texture_wall, (32 * i, 32 * j))
     all_sprites.draw(sc)
     pygame.display.flip()
     # TODO: отраисовывать карту и игрока в ней
