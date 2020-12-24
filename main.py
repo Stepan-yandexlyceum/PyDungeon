@@ -3,15 +3,17 @@ import os
 import sys
 from settings import *
 from player import Player
-from map import text_map
+from map import *
 from Character import Character
 from Armor import Armor
 from Weapon import Weapon
 from Enemy import Enemy
+
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -21,6 +23,7 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
 
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
@@ -38,14 +41,15 @@ while True:
     for event in pygame.event.get():
         sc.fill((0, 0, 0))
 
-        a, b = 0, 0 # что это? а как же осмысленные имена переменных?
-
         if event.type == pygame.QUIT:
             running = False
-        
+
         # движение игрока
         hero.movement()
-
+    for i in range(map_height):
+        for j in range(map_width):
+            if text_map[i][j] == 'w':
+                pygame.draw.rect(sc, pygame.Color('grey'), (32*i, 32*j, 32, 32))
     all_sprites.draw(sc)
     pygame.display.flip()
     # TODO: отраисовывать карту и игрока в ней
