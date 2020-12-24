@@ -5,7 +5,7 @@ import pygame
 
 
 class Player(Character):
-    image = pygame.image.load("data/Knight_01_right.png")
+    image = pygame.image.load("data/image/Knight_01_right.png")
     image = pygame.transform.scale(image, (32, 32))
 
     def __init__(self, weapon, armor, screen, sprites):

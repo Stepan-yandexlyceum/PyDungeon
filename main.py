@@ -25,8 +25,7 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
-texture_wall = load_image("textures_dungeon_001.png")
-
+texture_wall = load_image("image/textures_dungeon_001.png")
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
 
