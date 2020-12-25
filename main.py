@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 from settings import *
+from Chest import *
 from player import Player
 from map import *
 from Character import Character
@@ -50,18 +51,20 @@ texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
 texture_floor = pygame.transform.scale(texture_floor, (32, 32))
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
-
+character_sprites = pygame.sprite.Group()
 # создадим начальное снаряжение для игрока (потом переденесем в БД, но потом)
 wooden_baton = Weapon("деревянная дубина", 3, 2)
 leather_cuirass = Armor("кожаная кираса", 0, 1)
 
 # создадим игрока
-hero = Player(wooden_baton, leather_cuirass, sc, all_sprites)
+hero = Player(wooden_baton, leather_cuirass, sc, character_sprites)
 
 running = True
 # основной цикл отрисовки
 start = False
 start_screen()
+
+generation_chest(5, all_sprites)
 
 while True:
     sc.fill((0, 0, 0))
@@ -83,5 +86,6 @@ while True:
                 if text_map[i][j] == 'c':
                     sc.blit(texture_floor, (32 * i, 32 * j))
         all_sprites.draw(sc)
+        character_sprites.draw(sc)
         pygame.display.flip()
     clock.tick(FPS)

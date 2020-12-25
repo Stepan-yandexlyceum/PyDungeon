@@ -258,9 +258,19 @@ def map_generation(map_width, map_height):
 
     return maze
 
+def get_corridors(map):
+    answer = []
+    for i in range(map_height):
+            for j in range(map_width):
+                if text_map[i][j] == 'c':
+                    answer.append((i, j))
+
+    return answer
+
 
 text_map = map_generation(map_width, map_height)
 # размеры карты (в клеточках)
+list_corridors = get_corridors(text_map)
 
 world_map = set()
 # row - координата x (строка, итерация по столбцам)
