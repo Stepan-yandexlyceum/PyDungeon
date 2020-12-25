@@ -15,7 +15,6 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 
-
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     # если файл не существует, то выходим
@@ -25,7 +24,30 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
+
+def start_screen():
+    intro_text = ["ДОБРО ПОЖАЛОВАТЬ В PYDUNGEON",
+                  "Для того, чтобы выбраться от сюда,",
+                  "Вам понадобится пройти три уровня катакомб и побороть невиданных чудищ",
+                  "Если Вы псих, нажмите любую кнопку"]
+
+    fon = pygame.transform.scale(load_image('image/dungeon_intro.jpeg'), (WIDTH, HEIGHT))
+    sc.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('yellow'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        sc.blit(string_rendered, intro_rect)
+
+
 texture_wall = load_image("image/textures_dungeon_001.png")
+texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
+texture_floor = pygame.transform.scale(texture_floor, (32, 32))
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
 
@@ -38,20 +60,28 @@ hero = Player(wooden_baton, leather_cuirass, sc, all_sprites)
 
 running = True
 # основной цикл отрисовки
+start = False
+start_screen()
+
 while True:
+    sc.fill((0, 0, 0))
     for event in pygame.event.get():
         sc.fill((0, 0, 0))
-
         if event.type == pygame.QUIT:
             running = False
-
-        # движение игрока
-        hero.movement()
-    for i in range(map_height):
-        for j in range(map_width):
-            if text_map[i][j] == 'w':
-                sc.blit(texture_wall, (32 * i, 32 * j))
-    all_sprites.draw(sc)
-    pygame.display.flip()
-    # TODO: отраисовывать карту и игрока в ней
+        if event.type == pygame.KEYDOWN:
+            hero.movement()
+        if hero.x >= map_width - 1:
+            # TODO: сообщение о победе и переход на новый уровень
+            print("WIN")
+            break
+        # рисуем карту
+        for i in range(map_height):
+            for j in range(map_width):
+                if text_map[i][j] == 'w':
+                    sc.blit(texture_wall, (32 * i, 32 * j))
+                if text_map[i][j] == 'c':
+                    sc.blit(texture_floor, (32 * i, 32 * j))
+        all_sprites.draw(sc)
+        pygame.display.flip()
     clock.tick(FPS)
