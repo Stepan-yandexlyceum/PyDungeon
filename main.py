@@ -15,6 +15,9 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
 
+def terminate():
+    pygame.quit()
+    sys.exit()
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -24,7 +27,6 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
-
 
 def start_screen():
     intro_text = ["ДОБРО ПОЖАЛОВАТЬ В PYDUNGEON",
@@ -44,6 +46,15 @@ def start_screen():
         intro_rect.x = 10
         text_coord += intro_rect.height
         sc.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        pygame.display.flip()
 
 
 texture_wall = load_image("image/textures_dungeon_001.png")
@@ -78,6 +89,7 @@ while True:
             # TODO: сообщение о победе и переход на новый уровень
             print("WIN")
             break
+
         # рисуем карту
         for i in range(map_height):
             for j in range(map_width):
