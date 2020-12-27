@@ -7,17 +7,17 @@ from player import Player
 from map import *
 from Character import Character
 from Armor import Armor
-from Weapon import Weapon
-from Enemy import Enemy
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
 
+
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -27,6 +27,7 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
 
 def start_screen():
     intro_text = ["ДОБРО ПОЖАЛОВАТЬ В PYDUNGEON",

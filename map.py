@@ -258,12 +258,13 @@ def map_generation(map_width, map_height):
 
     return maze
 
+
 def get_corridors(map):
     answer = []
     for i in range(map_height):
-            for j in range(map_width):
-                if text_map[i][j] == 'c':
-                    answer.append((i, j))
+        for j in range(map_width):
+            if text_map[i][j] == 'c':
+                answer.append((i, j))
 
     return answer
 
