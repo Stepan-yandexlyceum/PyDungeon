@@ -1,7 +1,7 @@
 import pygame
 from map import list_corridors
 from random import choice
-import settings
+from settings import *
 
 
 class Chest(pygame.sprite.Sprite):
@@ -11,7 +11,7 @@ class Chest(pygame.sprite.Sprite):
         super().__init__(sprites_grop)
         self.image = Chest.image
         self.x, self.y = coord
-        self.rect = pygame.Rect(self.x * 32 + 5, self.y * 32 + 5, 22, 22)
+        self.rect = pygame.Rect(self.x * cell_size + 5, self.y * cell_size + 5, 22, 22)
 
 
 def generation_chest(num_chest, sprites_grop):
@@ -23,4 +23,3 @@ def generation_chest(num_chest, sprites_grop):
         else:
             coords_chest.append(coord)
             Chest(coord, sprites_grop)
-    

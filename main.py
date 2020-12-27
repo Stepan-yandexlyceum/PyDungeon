@@ -7,11 +7,16 @@ from player import Player
 from map import *
 from Character import Character
 from Armor import Armor
+from Items import *
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
+# количество предметов на каждом уровне - монстры, оружие, зелья
+level1 = [5, 6, 8]
+level2 = [7, 3, 5]
+level3 = [10, 1, 3]
 
 
 def terminate():
@@ -60,23 +65,20 @@ def start_screen():
 
 texture_wall = load_image("image/textures_dungeon_001.png")
 texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
-texture_floor = pygame.transform.scale(texture_floor, (32, 32))
+texture_floor = pygame.transform.scale(texture_floor, (cell_size, cell_size))
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
 character_sprites = pygame.sprite.Group()
-# создадим начальное снаряжение для игрока (потом переденесем в БД, но потом)
-wooden_baton = Weapon("деревянная дубина", 3, 2)
-leather_cuirass = Armor("кожаная кираса", 0, 1)
 
 # создадим игрока
-hero = Player(wooden_baton, leather_cuirass, sc, character_sprites)
+hero = Player(sc, character_sprites)
 
 running = True
 # основной цикл отрисовки
 start = False
 start_screen()
 
-generation_chest(5, all_sprites)
+# generation_chest(5, all_sprites)
 
 while True:
     sc.fill((0, 0, 0))
@@ -95,9 +97,22 @@ while True:
         for i in range(map_height):
             for j in range(map_width):
                 if text_map[i][j] == 'w':
-                    sc.blit(texture_wall, (32 * i, 32 * j))
+                    sc.blit(texture_wall, (cell_size * i, cell_size * j))
                 if text_map[i][j] == 'c':
-                    sc.blit(texture_floor, (32 * i, 32 * j))
+                    sc.blit(texture_floor, (cell_size * i, cell_size * j))
+        # добавляем объекты на карте
+        enemies = []
+        for num_items in level1:
+            # TODO: fix this
+            monster = Enemy('enemy', random.choice(["Ghost", "Minotaur", "Golem"]), character_sprites)
+            enemies.append(monster)
+        for enemy in enemies:
+            for i in range(map_height):
+                for j in range(map_width):
+                    if (j, i) == enemy.get_pos():
+                        sc.blit(enemy.image, (cell_size * i, cell_size * j))
+        # рисуем полостку здоровья
+        pygame.draw.rect(sc, pygame.Color('red'), (0, HEIGHT - 10, hero.health * 10, HEIGHT))
         all_sprites.draw(sc)
         character_sprites.draw(sc)
         pygame.display.flip()

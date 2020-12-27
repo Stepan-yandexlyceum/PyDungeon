@@ -5,7 +5,7 @@ WIDTH = 1200
 HEIGHT = 800
 HALF_WIDTH = WIDTH // 2
 HALF_HEIGHT = HEIGHT // 2
-
+cell_size = 32
 FPS = 60
 # размер 1 квадрата
 TILE = 100
