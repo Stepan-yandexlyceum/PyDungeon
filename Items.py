@@ -12,6 +12,7 @@ class Item(pygame.sprite.Sprite):
         super().__init__(sprites_group)
         self.type = type
         self.name = name
+        self.image = None
         self.generate_pos()
 
     def get_type(self):
@@ -32,6 +33,9 @@ class Item(pygame.sprite.Sprite):
         for i in range(len(list_corridors) - 1):
             if list_corridors[i] == (self.x, self.y):
                 list_corridors.pop(i)
+
+    def get_image(self):
+        return self.image
 
 
 class Enemy(Item):

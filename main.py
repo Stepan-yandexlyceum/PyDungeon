@@ -2,13 +2,12 @@ import pygame
 import os
 import sys
 from settings import *
-from Chest import *
 from player import Player
 from map import *
 from Character import Character
-from Armor import Armor
 from Items import Item, Enemy, Potion, Weapon
 from functions import *
+from random import choices
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -84,6 +83,7 @@ while True:
             running = False
         if event.type == pygame.KEYDOWN:
             hero.movement()
+            hero.print_inventory()
         if hero.x >= map_width - 1:
             # TODO: сообщение о победе и переход на новый уровень
             print("WIN")
@@ -104,6 +104,8 @@ while True:
                         sc.blit(enemy.image, (cell_size * i, cell_size * j))
         # рисуем полостку здоровья
         pygame.draw.rect(sc, pygame.Color('red'), (0, HEIGHT - 10, hero.health * 10, HEIGHT))
+        if hero.get_is_inventory_print:
+            pygame.draw.line(sc, (255, 0, 0), (1200, 0), (1200, 800), 2)
         all_sprites.draw(sc)
         character_sprites.draw(sc)
         pygame.display.flip()

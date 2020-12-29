@@ -15,6 +15,9 @@ class Player(Character):
         self.direction = 'right'
         self.health = 20
 
+        self.inventory = [None for i in range(15)]
+        self.is_inventory_print = False
+
     def pos(self):
         return self.x, self.y
 
@@ -72,3 +75,18 @@ class Player(Character):
                 self.direction = 'left'
             else:
                 self.direction = 'right'
+
+    def get_is_inventory_print(self):
+        return self.is_inventory_prints
+
+    def print_inventory(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_e]:
+            if self.is_inventory_print:
+                sc = pygame.display.set_mode((WIDTH, HEIGHT))
+            else:
+                sc = pygame.display.set_mode((WIDTH_MAP_AND_INVENTORY, HEIGHT))
+
+            self.is_inventory_print = not self.is_inventory_print
+
