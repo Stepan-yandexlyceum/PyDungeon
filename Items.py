@@ -71,15 +71,17 @@ class Enemy(Item):
 
 
 class Weapon(Item):
-    # TODO: добавить картинки оружия
     weapon_lib = {
-        "Меч": 5,
-        "Булава": 4,
-        "Посох": 3}
+        "Double_Axe": [8, "image\double_axe.png"],
+        "Hammer": [6, "image\hammer.png"],
+        "Stick": [2, "image\stick.png"],
+        "Sword": [5, "image\sword.png"]}
 
     def __init__(self, type, name, sprites_group):
         super().__init__(type, name, sprites_group)
-        self.damage = Weapon.weapon_lib[name] + random.randint(-2, 2)
+        self.damage = Weapon.weapon_lib[name][0] + random.randint(-2, 2)
+        self.image = load_image(Weapon.weapon_lib[name][1])
+        self.image = pygame.transform.scale(self.image, (cell_size, cell_size))
         self.rect = self.image.get_rect()
 
     def get_damage(self):

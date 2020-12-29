@@ -71,12 +71,16 @@ play_music("data\music\main_theme.mp3")
 start_screen()
 
 # добавляем объекты на карте
+# добавляем врагов
 enemies = []
 for i in range(level1[0]):
-    # TODO: fix this
     monster = Enemy('enemy', random.choice(["Ghost", "Minotaur", "Golem"]), character_sprites)
     enemies.append(monster)
-
+# добавляем оружие
+weapons = []
+for i in range(level1[1]):
+    weapon = Weapon('weapon', random.choice(["Double_Axe", "Hammer", "Stick", "Sword"]), character_sprites)
+    weapons.append(weapon)
 while True:
     sc.fill((0, 0, 0))
     for event in pygame.event.get():
@@ -98,12 +102,18 @@ while True:
                     sc.blit(texture_wall, (cell_size * i, cell_size * j))
                 if text_map[i][j] == 'c':
                     sc.blit(texture_floor, (cell_size * i, cell_size * j))
-
+        # рисуем монстров
         for enemy in enemies:
             for i in range(map_height):
                 for j in range(map_width):
                     if (i, j) == enemy.get_pos():
                         sc.blit(enemy.image, (cell_size * i, cell_size * j))
+        # рисуем оружие
+        for weapon in weapons:
+            for i in range(map_height):
+                for j in range(map_width):
+                    if (i, j) == weapon.get_pos():
+                        sc.blit(weapon.image, (cell_size * i, cell_size * j))
         # рисуем полостку здоровья
         pygame.draw.rect(sc, pygame.Color('red'), (0, HEIGHT - 10, hero.health * 10, HEIGHT))
         if hero.get_is_inventory_print:
