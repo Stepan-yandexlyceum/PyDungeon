@@ -7,7 +7,8 @@ from player import Player
 from map import *
 from Character import Character
 from Armor import Armor
-from Items import *
+from Items import Item, Enemy, Potion, Weapon
+from functions import *
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -22,16 +23,6 @@ level3 = [10, 1, 3]
 def terminate():
     pygame.quit()
     sys.exit()
-
-
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    return image
 
 
 def start_screen():
@@ -78,7 +69,12 @@ running = True
 start = False
 start_screen()
 
-# generation_chest(5, all_sprites)
+# добавляем объекты на карте
+enemies = []
+for i in range(level1[0]):
+    # TODO: fix this
+    monster = Enemy('enemy', random.choice(["Ghost", "Minotaur", "Golem"]), character_sprites)
+    enemies.append(monster)
 
 while True:
     sc.fill((0, 0, 0))
@@ -100,16 +96,11 @@ while True:
                     sc.blit(texture_wall, (cell_size * i, cell_size * j))
                 if text_map[i][j] == 'c':
                     sc.blit(texture_floor, (cell_size * i, cell_size * j))
-        # добавляем объекты на карте
-        enemies = []
-        for num_items in level1:
-            # TODO: fix this
-            monster = Enemy('enemy', random.choice(["Ghost", "Minotaur", "Golem"]), character_sprites)
-            enemies.append(monster)
+
         for enemy in enemies:
             for i in range(map_height):
                 for j in range(map_width):
-                    if (j, i) == enemy.get_pos():
+                    if (i, j) == enemy.get_pos():
                         sc.blit(enemy.image, (cell_size * i, cell_size * j))
         # рисуем полостку здоровья
         pygame.draw.rect(sc, pygame.Color('red'), (0, HEIGHT - 10, hero.health * 10, HEIGHT))

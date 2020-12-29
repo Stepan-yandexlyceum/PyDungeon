@@ -1,6 +1,6 @@
 import pygame
 import random
-from main import load_image
+from functions import *
 from settings import *
 from map import map_width, map_height, list_corridors
 
@@ -12,7 +12,7 @@ class Item(pygame.sprite.Sprite):
         super().__init__(sprites_group)
         self.type = type
         self.name = name
-        self.x, self.y = 0, 0
+        self.generate_pos()
 
     def get_type(self):
         return self.type
@@ -22,9 +22,14 @@ class Item(pygame.sprite.Sprite):
 
     def generate_pos(self):
         # генерируем положение монстра
-        self.x, self.y = random.choice(list_corridors)
+        ok = False
+        while not ok:
+            ok = True
+            self.x, self.y = random.choice(list_corridors)
+            if (self.x, self.y) not in list_corridors:
+                ok = False
         # удаляем занятое поле
-        for i in range(list_corridors):
+        for i in range(len(list_corridors) - 1):
             if list_corridors[i] == (self.x, self.y):
                 list_corridors.pop(i)
 
@@ -32,9 +37,9 @@ class Item(pygame.sprite.Sprite):
 class Enemy(Item):
     # название: [урон, здоровье, картинка]
     enemy_lib = {
-        "Ghost": [5, 8, "Wraith_01_Idle_000.png"],
-        "Minotaur": [4, 15, "Minotaur_01_Idle_000.png"],
-        "Golem": [7, 20, "Golem_01_Idle.png"]
+        "Ghost": [5, 8, "image\Wraith_01_Idle_000.png"],
+        "Minotaur": [4, 15, "image\Minotaur_01_Idle_000.png"],
+        "Golem": [7, 20, "image\Golem_01_Idle.png"]
     }
 
     def __init__(self, type, name, sprites_group):
@@ -42,8 +47,9 @@ class Enemy(Item):
         # определяем характеристики по имени монстра
         self.health = Enemy.enemy_lib[name][0] + random.randint(-2, 2)  # делаем небольшой разброс по характеристикам
         self.damage = Enemy.enemy_lib[name][1] + random.randint(-2, 2)
-        self.image = load_image(Enemy.enemy_lib[name][0])
-        self.image = pygame.transform.scale(self.image, cell_size)
+        self.image = load_image(Enemy.enemy_lib[name][2])
+        self.image = pygame.transform.scale(self.image, (cell_size, cell_size))
+        self.rect = self.image.get_rect()
 
     def get_health(self):
         return self.health
@@ -61,6 +67,7 @@ class Enemy(Item):
 
 
 class Weapon(Item):
+    # TODO: добавить картинки оружия
     weapon_lib = {
         "Меч": 5,
         "Булава": 4,
@@ -69,6 +76,7 @@ class Weapon(Item):
     def __init__(self, type, name, sprites_group):
         super().__init__(type, name, sprites_group)
         self.damage = Weapon.weapon_lib[name] + random.randint(-2, 2)
+        self.rect = self.image.get_rect()
 
     def get_damage(self):
         return self.damage
@@ -87,7 +95,8 @@ class Potion(Item):
     def __init__(self, type, name, sprites_group):
         super().__init__(type, name, sprites_group)
         self.image = load_image(Potion.potion_lib[name][1])
-        self.image = pygame.transform.scale(self.image, cell_size)
+        self.image = pygame.transform.scale(self.image, (cell_size, cell_size))
+        self.rect = self.image.get_rect()
 
     def get_name(self):
         return self.name
