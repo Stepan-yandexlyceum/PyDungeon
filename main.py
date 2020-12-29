@@ -8,6 +8,7 @@ from Character import Character
 from Items import Item, Enemy, Potion, Weapon
 from functions import *
 from random import choices
+from music_player import play_music
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -66,6 +67,7 @@ hero = Player(sc, character_sprites)
 running = True
 # основной цикл отрисовки
 start = False
+play_music("data\music\main_theme.mp3")
 start_screen()
 
 # добавляем объекты на карте
