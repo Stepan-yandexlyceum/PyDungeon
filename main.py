@@ -5,7 +5,7 @@ from settings import *
 from player import Player
 from map import *
 from Character import Character
-from Items import Item, Enemy, Potion, Weapon
+from Items import *
 from functions import *
 from random import choices
 from music_player import play_music
@@ -14,10 +14,10 @@ pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
-# количество предметов на каждом уровне - монстры, оружие, зелья
-level1 = [5, 6, 8]
-level2 = [7, 3, 5]
-level3 = [10, 1, 3]
+# количество предметов на каждом уровне - монстры, оружие,броня, зелья
+level1 = [5, 6, 5, 8]
+level2 = [7, 3, 4, 5]
+level3 = [10, 1, 2, 3]
 
 
 def terminate():
@@ -54,7 +54,8 @@ def start_screen():
         pygame.display.flip()
 
 
-texture_wall = load_image("image/textures_dungeon_001.png")
+texture_wall = load_image("image/Brick_Wall_009.jpg")
+texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
 texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
 texture_floor = pygame.transform.scale(texture_floor, (cell_size, cell_size))
 # создадим группу, содержащую все спрайты
@@ -81,6 +82,15 @@ weapons = []
 for i in range(level1[1]):
     weapon = Weapon('weapon', random.choice(["Double_Axe", "Hammer", "Stick", "Sword"]), character_sprites)
     weapons.append(weapon)
+armor = []
+for i in range(level1[2]):
+    arm = Armor('armor', random.choice(["Helmet1", "Helmet2", "Cuiras1", "Cuiras2", "Arm_armor1", "Arm_armor2",
+                                        "Leg_armor1", "Leg_armor2"]), character_sprites)
+    armor.append(arm)
+potions = []
+for i in range(level1[3]):
+    potion = Potion('potion', random.choice(["Small_health", "Small_strength"]), character_sprites)
+    potions.append(potion)
 while True:
     sc.fill((0, 0, 0))
     for event in pygame.event.get():
@@ -114,6 +124,18 @@ while True:
                 for j in range(map_width):
                     if (i, j) == weapon.get_pos():
                         sc.blit(weapon.image, (cell_size * i, cell_size * j))
+        # рисуем броню
+        for arm in armor:
+            for i in range(map_height):
+                for j in range(map_width):
+                    if (i, j) == arm.get_pos():
+                        sc.blit(arm.image, (cell_size * i, cell_size * j))
+        # рисуем зелья
+        for potion in potions:
+            for i in range(map_height):
+                for j in range(map_width):
+                    if (i, j) == potion.get_pos():
+                        sc.blit(potion.image, (cell_size * i, cell_size * j))
         # рисуем полостку здоровья
         pygame.draw.rect(sc, pygame.Color('red'), (0, HEIGHT - 10, hero.health * 10, HEIGHT))
         if hero.get_is_inventory_print:

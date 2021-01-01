@@ -2,7 +2,7 @@ import pygame
 import random
 from functions import *
 from settings import *
-from map import map_width, map_height, list_corridors
+from map import map_width, map_height, list_corridors, text_map
 
 
 # тут собраны все предметы и существа, которые могут встретиться в подземелье
@@ -91,12 +91,34 @@ class Weapon(Item):
         list_corridors.append((self.x, self.y))
 
 
+class Armor(Item):
+    armor_lib = {
+        "Helmet1": [2, "image\helmet1.png"],
+        "Helmet2": [5, "image\helmet2.png"],
+        "Cuiras1": [5, "image\cuiras1.png"],
+        "Cuiras2": [8, "image\cuiras2.png"],
+        "Arm_armor1": [2, "image\\arm_armor1.png"],
+        "Arm_armor2": [4, "image\\arm_armor2.png"],
+        "Leg_armor1": [1, "image\leg_armor1.png"],
+        "Leg_armor2": [3, "image\leg_armor2.png"],
+    }
+
+    def __init__(self, type, name, sprites_group):
+        super().__init__(type, name, sprites_group)
+        self.defence = Armor.armor_lib[name][0]
+        self.image = load_image(Armor.armor_lib[name][1])
+        self.image = pygame.transform.scale(self.image, (cell_size, cell_size))
+        self.rect = self.image.get_rect()
+
+    def get_defence(self):
+        return self.defence
+
+
 class Potion(Item):
     # тут мало свойств тк у каждого зелья свой эффект
     potion_lib = {
-        "Small_health": [3, "small_health_potion.png"],
-        "Булава": [3, "small_strength_potion.png"],
-        "Посох": [3, "icon27.png"]}
+        "Small_health": [3, "image\small_health_potion.png"],
+        "Small_strength": [3, "image\small_strength_potion.png"]}
 
     def __init__(self, type, name, sprites_group):
         super().__init__(type, name, sprites_group)
