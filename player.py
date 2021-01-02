@@ -1,4 +1,5 @@
 from map import text_map
+from items import *
 from settings import *
 from Character import *
 import pygame
@@ -8,8 +9,8 @@ class Player(Character):
     image = pygame.image.load("data/image/Knight_01_right.png")
     image = pygame.transform.scale(image, (cell_size, cell_size))
 
-    def __init__(self, screen, sprites, weapon="", armor=""):
-        super().__init__(weapon, armor, sprites)
+    def __init__(self, screen, sprites, weapon=None, armor=None, helmet=None, leg=None):
+        super().__init__(weapon, armor, helmet, leg, sprites)
         self.x, self.y = player_pos
         self.rect = pygame.Rect(self.x * cell_size, self.y * cell_size, cell_size, cell_size)
         self.direction = 'right'
@@ -90,3 +91,14 @@ class Player(Character):
 
             self.is_inventory_print = not self.is_inventory_print
 
+    def get_armor(self):
+        if self.armor is Armor:
+            return self.armor
+
+    def get_helmet(self):
+        if self.helmet is Armor:
+            return self.helmet
+
+    def get_leg(self):
+        if self.leg is Armor:
+            return self.leg
