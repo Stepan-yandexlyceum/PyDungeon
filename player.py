@@ -1,12 +1,12 @@
+from Items import *
 from map import text_map
-from items import *
 from settings import *
 from Character import *
 import pygame
 
 
 class Player(Character):
-    image = pygame.image.load("data/image/Knight_01_right.png")
+    image = pygame.image.load("data/image/knight.png")
     image = pygame.transform.scale(image, (cell_size, cell_size))
 
     def __init__(self, screen, sprites, weapon=None, armor=None, helmet=None, leg=None):

@@ -6,7 +6,8 @@ from functions import sc, texture_wall, texture_floor, character_sprites
 level1 = [5, 6, 5, 8]
 level2 = [7, 3, 4, 5]
 level3 = [10, 1, 2, 3]
-
+# текущий уровень
+cur_level = 1
 # добавляем объекты на карте
 # добавляем врагов
 enemies = []
