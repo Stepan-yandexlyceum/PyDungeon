@@ -7,8 +7,7 @@ import random
 # UPD:
 # c - проход
 # w - стена
-map_width = 13
-map_height = 13
+
 map = []
 
 
@@ -270,12 +269,9 @@ def get_corridors(map):
 
 
 text_map = map_generation(map_width, map_height)
-# размеры карты (в клеточках)
 list_corridors = get_corridors(text_map)
 
-world_map = set()
-# row - координата x (строка, итерация по столбцам)
-for j, row in enumerate(text_map):
-    for i, char in enumerate(row):
-        if char == '1':
-            world_map.add((i * TILE, j * TILE))
+
+def new_map():
+    text_map = map_generation(map_width, map_height)
+    list_corridors = get_corridors(text_map)

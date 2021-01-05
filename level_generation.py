@@ -62,3 +62,5 @@ def draw_map():
             for j in range(map_width):
                 if (i, j) == potion.get_pos():
                     sc.blit(potion.image, (cell_size * i, cell_size * j))
+
+

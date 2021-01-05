@@ -8,7 +8,7 @@ class Character(pygame.sprite.Sprite):
         self.armor = armor
         self.helmet = helmet
         self.leg = leg
-        self.x = 0  # TODO: генерировать это в соответствии с условиями
+        self.x = 0
         self.y = 0
 
     @property
