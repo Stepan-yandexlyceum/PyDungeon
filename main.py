@@ -8,7 +8,7 @@ from Character import Character
 from Items import *
 from functions import *
 from random import choices
-from music_player import play_music, injure_sound
+from music_player import play_music, injure_sound, door_sound
 from level_generation import *
 
 pygame.init()
@@ -83,6 +83,7 @@ while running:
         running = False
 
     if hero.x >= map_width - 1:
+        door_sound()
         level2_screen()
         cur_level += 1
         # map_width += 4
@@ -95,7 +96,8 @@ while running:
     draw_map()
 
     # рисуем полостку здоровья
-    pygame.draw.rect(sc, pygame.Color('red'), (0, HEIGHT - 10, hero.health * 10, HEIGHT))
+    pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, 10 + hero.health * 10, 10))
+    sc.blit(hp_bar, (0, HEIGHT - 25, 200, 10))
     if hero.get_is_inventory_print:
         pygame.draw.line(sc, (255, 0, 0), (1200, 0), (1200, 800), 2)
     # TODO: fix this

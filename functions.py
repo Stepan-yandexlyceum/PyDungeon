@@ -4,6 +4,8 @@ import pygame
 from settings import *
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
+# текущий уровень
+cur_level = 1
 
 
 def load_image(name, colorkey=None):
@@ -16,17 +18,28 @@ def load_image(name, colorkey=None):
     return image
 
 
-texture_wall = load_image("image/Brick_Wall_009.jpg")
+if cur_level == 1:
+    texture_wall = load_image("image/Brick_Wall_009.jpg")
+elif cur_level == 2:
+    texture_wall = load_image("image/stone_wall2.png")
+else:
+    texture_wall = load_image("image/wall3.jpg")
 texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
 texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
 texture_floor = pygame.transform.scale(texture_floor, (cell_size, cell_size))
+hp_bar = load_image("image/hud/frame.png")
+hp_bar = pygame.transform.scale(hp_bar, (240, 20))
+door = load_image("image/castledoors.png")
+door = pygame.transform.scale(door, (cell_size, cell_size))
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
 character_sprites = pygame.sprite.Group()
 
+
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 def start_screen():
     intro_text = ["ДОБРО ПОЖАЛОВАТЬ В PYDUNGEON",
@@ -56,6 +69,7 @@ def start_screen():
                 return
         pygame.display.flip()
 
+
 def level2_screen():
     intro_text = ["ВЫ СМОГЛИ ПРОЙТИ ПЕРВЫЙ УРОВЕНЬ ПОДЗЕМЕЛЬЯ",
                   "но это еще не конец...",
@@ -83,6 +97,7 @@ def level2_screen():
                     event.type == pygame.MOUSEBUTTONDOWN:
                 return
         pygame.display.flip()
+
 
 def level3_screen():
     intro_text = ["НЕМНОГИЕ ЗАХОДИЛИ ТАК ДАЛЕКО",

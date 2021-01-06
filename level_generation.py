@@ -1,13 +1,12 @@
 import pygame
 from Items import *
-from functions import sc, texture_wall, texture_floor, character_sprites
+from functions import sc, texture_wall, texture_floor, character_sprites, cur_level
 
 # количество предметов на каждом уровне - монстры, оружие,броня, зелья
 level1 = [5, 6, 5, 8]
 level2 = [7, 3, 4, 5]
 level3 = [10, 1, 2, 3]
-# текущий уровень
-cur_level = 1
+
 # добавляем объекты на карте
 # добавляем врагов
 enemies = []
@@ -38,6 +37,8 @@ def draw_map():
                 sc.blit(texture_wall, (cell_size * i, cell_size * j))
             if text_map[i][j] == 'c':
                 sc.blit(texture_floor, (cell_size * i, cell_size * j))
+            if text_map[i][j] == 'c' and i == map_width - 1:
+                sc.blit(door, (cell_size * i, cell_size * j))
     # рисуем монстров
     for enemy in enemies:
         for i in range(map_height):
@@ -62,5 +63,3 @@ def draw_map():
             for j in range(map_width):
                 if (i, j) == potion.get_pos():
                     sc.blit(potion.image, (cell_size * i, cell_size * j))
-
-
