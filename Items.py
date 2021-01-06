@@ -49,8 +49,8 @@ class Enemy(Item):
     def __init__(self, type, name, sprites_group):
         super().__init__(type, name, sprites_group)
         # определяем характеристики по имени монстра
-        self.health = Enemy.enemy_lib[name][0] + random.randint(-2, 2)  # делаем небольшой разброс по характеристикам
-        self.damage = Enemy.enemy_lib[name][1] + random.randint(-2, 2)
+        self.health = Enemy.enemy_lib[name][1] + random.randint(-2, 2)  # делаем небольшой разброс по характеристикам
+        self.damage = Enemy.enemy_lib[name][0] + random.randint(-2, 2)
         self.image = load_image(Enemy.enemy_lib[name][2])
         self.image = pygame.transform.scale(self.image, (cell_size, cell_size))
         self.rect = self.image.get_rect()

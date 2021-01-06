@@ -59,12 +59,16 @@ while running:
                     if hero.weapon:
                         enemy.health -= hero.weapon.damage
                     else:
-                        enemy.health -= 1
+                        enemy.health -= 2
                     if enemy.health <= 0:
                         enemy.kill()
                     injure_sound()
+                    # TODO: можно настроить область распространения частиц
+                    screen_rect = (hero.x * cell_size, hero.y * cell_size, hero.x * cell_size + cell_size,
+                                   hero.y * cell_size + cell_size)
+                    create_particles((hero.x * cell_size, hero.y * cell_size), screen_rect)
+
                     break
-                    # TODO: добавить эффекты сражения
             # TODO: добавить в класс игрока метод add_inventory(item) для добавления предмета в инвентарь
             for weapon in weapons:
                 if (hero.x, hero.y) == weapon.get_pos():
@@ -101,7 +105,10 @@ while running:
     if hero.get_is_inventory_print:
         pygame.draw.line(sc, (255, 0, 0), (1200, 0), (1200, 800), 2)
     # TODO: fix this
-    # all_sprites.draw(sc)
+    all_sprites.update()
+    all_sprites.draw(sc)
     character_sprites.draw(sc)
+    if hero.health < 5:
+        sc.blit(blood_screen, (0, 0))
     pygame.display.flip()
     clock.tick(FPS)
