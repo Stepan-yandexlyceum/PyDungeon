@@ -137,6 +137,31 @@ def level3_screen():
                 return
         pygame.display.flip()
 
+def gameover_screen():
+    intro_text = ["В следующий раз повезет",
+                  "возможно..."]
+
+    fon = pygame.transform.scale(load_image('image/gameover.jpg'), (WIDTH, HEIGHT))
+    sc.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 700
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('yellow'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        sc.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        pygame.display.flip()
 
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера

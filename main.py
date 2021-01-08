@@ -40,8 +40,7 @@ while running:
                 if (hero.x, hero.y) == enemy.get_pos():
                     print("hit")
                     # откатываем игрока на предыдущую клетку
-                    # TODO: откат персонажа
-                    # hero.x, hero.y = prev_pos
+                    hero.x, hero.y = prev_pos
                     character_sprites.draw(sc)
 
                     # если у героя есть броня
@@ -81,6 +80,7 @@ while running:
                     potions.remove(potion)
     # проверяем здоровье игрока
     if hero.health <= 0:
+        gameover_screen()
         running = False
         terminate()
     if hero.x >= map_width - 1:
