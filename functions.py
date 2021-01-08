@@ -19,13 +19,19 @@ def load_image(name, colorkey=None):
     return image
 
 
-if cur_level == 1:
-    texture_wall = load_image("image/Brick_Wall_009.jpg")
-elif cur_level == 2:
-    texture_wall = load_image("image/stone_wall2.png")
-else:
-    texture_wall = load_image("image/wall3.jpg")
-texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+def update_wall_color():
+    if cur_level == 1:
+        texture_wall = load_image("image/Brick_Wall_009.jpg")
+        texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+    elif cur_level == 2:
+        texture_wall = load_image("image/stone_wall2.png")
+        texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+    else:
+        texture_wall = load_image("image/wall3.jpg")
+        texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+    return texture_wall
+
+
 texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
 texture_floor = pygame.transform.scale(texture_floor, (cell_size, cell_size))
 hp_bar = load_image("image/hud/frame.png")
@@ -132,7 +138,6 @@ def level3_screen():
         pygame.display.flip()
 
 
-
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера
     fire = [load_image("image/bloodsplats.png")]
@@ -140,7 +145,7 @@ class Particle(pygame.sprite.Sprite):
     for scale in (5, 10, 20):
         fire.append(pygame.transform.scale(fire[0], (scale, scale)))
 
-    def __init__(self, pos,dx,dy, screen_rect):
+    def __init__(self, pos, dx, dy, screen_rect):
         super().__init__(all_sprites)
         self.image = random.choice(self.fire)
         self.rect = self.image.get_rect()
@@ -168,10 +173,10 @@ class Particle(pygame.sprite.Sprite):
 GRAVITY = 1
 
 
-def create_particles(position,screen_rect):
+def create_particles(position, screen_rect):
     # количество создаваемых частиц
     particle_count = 20
     # возможные скорости
     numbers = range(-5, 6)
     for _ in range(particle_count):
-        Particle(position, random.choice(numbers), random.choice(numbers),screen_rect)
+        Particle(position, random.choice(numbers), random.choice(numbers), screen_rect)

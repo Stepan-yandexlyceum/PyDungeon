@@ -20,5 +20,21 @@ def door_sound():
     door = mixer.Sound(
         random.choice(
             ["data\music\door-01.flac", "data\music\door-02.flac", "data\music\door-03.flac", "data\music\door-04.flac",
-             "data\music\door-05.wav", "data\music\door-06.flac", "data\music\door-07.flac"]))
+             "data\music\door-05.flac", "data\music\door-06.flac", "data\music\door-07.flac"]))
     door.play()
+
+
+def step_sound():
+    step = mixer.Sound(
+        random.choice(["data\music\step1.flac", "data\music\step2.flac"])
+    )
+    step.play()
+
+
+def inventory_sound(type="other"):
+    if type == "weapon":
+        sound = mixer.Sound("data\music\metal-clash.wav")
+    else:
+        sound = mixer.Sound(
+            random.choice(["data\music\leather_inventory.wav", "data\music\cloth-inventory.wav"]))
+    sound.play()

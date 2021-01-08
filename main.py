@@ -1,14 +1,7 @@
 import pygame
-import os
-import sys
-from settings import *
 from player import Player
 from map import *
-from Character import Character
-from Items import *
-from functions import *
-from random import choices
-from music_player import play_music, injure_sound, door_sound
+from music_player import *
 from level_generation import *
 
 pygame.init()
@@ -29,7 +22,7 @@ list_corridors = get_corridors(text_map)
 start = False
 play_music("data\music\main_theme.mp3")
 start_screen()
-
+generate_new_level()
 while running:
     sc.fill((0, 0, 0))
     for event in pygame.event.get():
@@ -40,6 +33,7 @@ while running:
             # сохраняем предыдущую позицию игрока
             prev_pos = (hero.x, hero.y)
             hero.movement()
+            step_sound()
             hero.print_inventory()
             # проверяем на столкновения с предметами
             for enemy in enemies:
@@ -73,19 +67,22 @@ while running:
             for weapon in weapons:
                 if (hero.x, hero.y) == weapon.get_pos():
                     # hero.add_inventory(weapon)
+                    inventory_sound("weapon")
                     weapons.remove(weapon)
             for arm in armor:
                 if (hero.x, hero.y) == arm.get_pos():
                     # hero.add_inventory(arm)
+                    inventory_sound()
                     armor.remove(arm)
             for potion in potions:
                 if (hero.x, hero.y) == potion.get_pos():
                     # hero.add_inventory(potion)
+                    inventory_sound()
                     potions.remove(potion)
     # проверяем здоровье игрока
     if hero.health <= 0:
         running = False
-
+        terminate()
     if hero.x >= map_width - 1:
         door_sound()
         level2_screen()
@@ -94,11 +91,16 @@ while running:
         # map_height += 4
         # заново генерируем лабиринт
         print("new level")
-        new_map()
+        text_map = new_map()
+        generate_new_level()
         hero.x, hero.y = 1, 1
         # break
     draw_map()
-
+    # рисуем игрока
+    for i in range(map_height):
+        for j in range(map_width):
+            if (i, j) == (hero.x, hero.y):
+                sc.blit(hero.image, (cell_size * i, cell_size * j))
     # рисуем полостку здоровья
     pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, 10 + hero.health * 10, 10))
     sc.blit(hp_bar, (0, HEIGHT - 25, 200, 10))
@@ -107,7 +109,7 @@ while running:
     # TODO: fix this
     all_sprites.update()
     all_sprites.draw(sc)
-    character_sprites.draw(sc)
+    # character_sprites.draw(sc)
     if hero.health < 5:
         sc.blit(blood_screen, (0, 0))
     pygame.display.flip()

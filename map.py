@@ -273,5 +273,6 @@ list_corridors = get_corridors(text_map)
 
 
 def new_map():
-    text_map = map_generation(map_width, map_height)
+    new = map_generation(map_width, map_height)
     list_corridors = get_corridors(text_map)
+    return new
