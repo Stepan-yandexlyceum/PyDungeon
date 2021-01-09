@@ -15,8 +15,6 @@ hero = Player(sc, character_sprites)
 running = True
 
 # создаем карту
-text_map = map_generation(map_width, map_height)
-list_corridors = get_corridors(text_map)
 
 # основной цикл отрисовки
 start = False
@@ -26,7 +24,6 @@ generate_new_level()
 while running:
     sc.fill((0, 0, 0))
     for event in pygame.event.get():
-        sc.fill((0, 0, 0))
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
@@ -50,11 +47,17 @@ while running:
                         hero.health -= enemy.damage
                     # если у героя есть оружие
                     if hero.weapon:
-                        enemy.health -= hero.weapon.damage
+                        enemy.health -= hero.weapon.get_damage()
                     else:
                         enemy.health -= 2
+                    # рисуем здоровье противника
+                    # pygame.draw.rect(sc, pygame.Color('black'),
+                    #                  (enemy.x * cell_size, enemy.y * cell_size + cell_size, cell_size, 3))
+                    # pygame.draw.rect(sc, pygame.Color('red'),
+                    #                  (enemy.x * cell_size, enemy.y * cell_size + cell_size, enemy.health, 3))
                     if enemy.health <= 0:
                         enemy.kill()
+                        enemies.remove(enemy)
                     injure_sound()
                     # TODO: можно настроить область распространения частиц
                     screen_rect = (hero.x * cell_size, hero.y * cell_size, hero.x * cell_size + cell_size,
@@ -66,16 +69,19 @@ while running:
             for weapon in weapons:
                 if (hero.x, hero.y) == weapon.get_pos():
                     # hero.add_inventory(weapon)
+                    hero.weapon = weapon
                     inventory_sound("weapon")
                     weapons.remove(weapon)
             for arm in armor:
                 if (hero.x, hero.y) == arm.get_pos():
                     # hero.add_inventory(arm)
+                    hero.armor = arm
                     inventory_sound()
                     armor.remove(arm)
             for potion in potions:
                 if (hero.x, hero.y) == potion.get_pos():
                     # hero.add_inventory(potion)
+                    hero.health += 5
                     inventory_sound()
                     potions.remove(potion)
     # проверяем здоровье игрока
@@ -91,7 +97,7 @@ while running:
         # map_height += 4
         # заново генерируем лабиринт
         print("new level")
-        text_map = new_map()
+        text_map = map_generation(map_width, map_height)
         generate_new_level()
         hero.x, hero.y = 1, 1
         # break
@@ -104,9 +110,17 @@ while running:
     # рисуем полостку здоровья
     pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, 10 + hero.health * 10, 10))
     sc.blit(hp_bar, (0, HEIGHT - 25, 200, 10))
+    # рисуем экипированные предметы
+    sc.blit(frame, (0, HEIGHT - 100, cell_size, cell_size))
+    sc.blit(hero.image, (0, HEIGHT - 100, cell_size, cell_size))
+    sc.blit(frame, (cell_size, HEIGHT - 100, cell_size, cell_size))
+    if hero.weapon:
+        sc.blit(hero.weapon.image, (cell_size, HEIGHT - 100, cell_size, cell_size))
+    sc.blit(frame, (cell_size * 2, HEIGHT - 100, cell_size, cell_size))
+    if hero.armor:
+        sc.blit(hero.armor.image, (cell_size * 2, HEIGHT - 100, cell_size, cell_size))
     if hero.get_is_inventory_print:
         pygame.draw.line(sc, (255, 0, 0), (1200, 0), (1200, 800), 2)
-    # TODO: fix this
     all_sprites.update()
     all_sprites.draw(sc)
     # character_sprites.draw(sc)

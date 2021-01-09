@@ -45,25 +45,13 @@ def draw_map():
                 sc.blit(door, (cell_size * i, cell_size * j))
     # рисуем монстров
     for enemy in enemies:
-        for i in range(map_height):
-            for j in range(map_width):
-                if (i, j) == enemy.get_pos():
-                    sc.blit(enemy.image, (cell_size * i, cell_size * j))
+        sc.blit(enemy.image, (cell_size * enemy.x, cell_size * enemy.y))
     # рисуем оружие
     for weapon in weapons:
-        for i in range(map_height):
-            for j in range(map_width):
-                if (i, j) == weapon.get_pos():
-                    sc.blit(weapon.image, (cell_size * i, cell_size * j))
+        sc.blit(weapon.image, (cell_size * weapon.x, cell_size * weapon.y))
     # рисуем броню
     for arm in armor:
-        for i in range(map_height):
-            for j in range(map_width):
-                if (i, j) == arm.get_pos():
-                    sc.blit(arm.image, (cell_size * i, cell_size * j))
+        sc.blit(arm.image, (cell_size * arm.x, cell_size * arm.y))
     # рисуем зелья
     for potion in potions:
-        for i in range(map_height):
-            for j in range(map_width):
-                if (i, j) == potion.get_pos():
-                    sc.blit(potion.image, (cell_size * i, cell_size * j))
+        sc.blit(potion.image, (cell_size * potion.x, cell_size * potion.y))

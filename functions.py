@@ -8,7 +8,6 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # текущий уровень
 cur_level = 1
 
-
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     # если файл не существует, то выходим
@@ -38,7 +37,8 @@ hp_bar = load_image("image/hud/frame.png")
 hp_bar = pygame.transform.scale(hp_bar, (240, 20))
 door = load_image("image/castledoors.png")
 door = pygame.transform.scale(door, (cell_size, cell_size))
-
+frame = load_image("image/hud/button_1(frame).png")
+frame = pygame.transform.scale(frame, (cell_size, cell_size))
 blood_screen = load_image("image/BloodOverlay.png")
 blood_screen = pygame.transform.scale(blood_screen, (WIDTH, HEIGHT))
 # создадим группу, содержащую все спрайты

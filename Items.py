@@ -74,7 +74,7 @@ class Weapon(Item):
     weapon_lib = {
         "Double_Axe": [8, "image\double_axe.png"],
         "Hammer": [6, "image\hammer.png"],
-        "Stick": [2, "image\stick.png"],
+        "Stick": [3, "image\stick.png"],
         "Sword": [5, "image\sword.png"]}
 
     def __init__(self, type, name, sprites_group):
