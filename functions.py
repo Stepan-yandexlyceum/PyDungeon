@@ -7,6 +7,8 @@ import random
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # текущий уровень
 cur_level = 1
+all_logs = []
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -16,6 +18,25 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
+
+def add_to_log(text):
+    all_logs.append(text)
+    if len(all_logs) > 20:
+        del all_logs[0]
+
+
+def print_log():
+    font = pygame.font.Font(None, 25)
+    text_coord = 25
+    for line in all_logs:
+        string_rendered = font.render(line, 1, pygame.Color('yellow'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 725
+        text_coord += intro_rect.height
+        sc.blit(string_rendered, intro_rect)
 
 
 def update_wall_color():
@@ -137,6 +158,7 @@ def level3_screen():
                 return
         pygame.display.flip()
 
+
 def gameover_screen():
     intro_text = ["В следующий раз повезет",
                   "возможно..."]
@@ -162,6 +184,7 @@ def gameover_screen():
                     event.type == pygame.MOUSEBUTTONDOWN:
                 return
         pygame.display.flip()
+
 
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера

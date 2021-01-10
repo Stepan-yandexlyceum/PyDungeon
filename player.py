@@ -15,6 +15,7 @@ class Player(Character):
         self.rect = pygame.Rect(self.x * cell_size, self.y * cell_size, cell_size, cell_size)
         self.direction = 'right'
         self.health = 20
+        self.max_health = 20
         self.weapon = weapon
         self.inventory = [None for i in range(15)]
         self.is_inventory_print = False
