@@ -6,7 +6,7 @@ import random
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # текущий уровень
-cur_level = 1
+all_logs = []
 
 
 def load_image(name, colorkey=None):
@@ -19,20 +19,46 @@ def load_image(name, colorkey=None):
     return image
 
 
-if cur_level == 1:
-    texture_wall = load_image("image/Brick_Wall_009.jpg")
-elif cur_level == 2:
-    texture_wall = load_image("image/stone_wall2.png")
-else:
-    texture_wall = load_image("image/wall3.jpg")
-texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+def add_to_log(text):
+    all_logs.append(text)
+    if len(all_logs) > 20:
+        del all_logs[0]
+
+
+def print_log():
+    font = pygame.font.Font(None, 25)
+    text_coord = 25
+    for line in all_logs:
+        string_rendered = font.render(line, 1, pygame.Color('yellow'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 725
+        text_coord += intro_rect.height
+        sc.blit(string_rendered, intro_rect)
+
+
+def update_wall_color(cur_level):
+    if cur_level == 1:
+        texture_wall = load_image("image/Brick_Wall_009.jpg")
+        texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+    elif cur_level == 2:
+        texture_wall = load_image("image/stone_wall2.png")
+        texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+    else:
+        texture_wall = load_image("image/wall3.jpg")
+        texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
+    return texture_wall
+
+
 texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
 texture_floor = pygame.transform.scale(texture_floor, (cell_size, cell_size))
 hp_bar = load_image("image/hud/frame.png")
 hp_bar = pygame.transform.scale(hp_bar, (240, 20))
 door = load_image("image/castledoors.png")
 door = pygame.transform.scale(door, (cell_size, cell_size))
-
+frame = load_image("image/hud/button_1(frame).png")
+frame = pygame.transform.scale(frame, (cell_size, cell_size))
 blood_screen = load_image("image/BloodOverlay.png")
 blood_screen = pygame.transform.scale(blood_screen, (WIDTH, HEIGHT))
 # создадим группу, содержащую все спрайты
@@ -134,6 +160,32 @@ def level3_screen():
         pygame.display.flip()
 
 
+def gameover_screen():
+    intro_text = ["В следующий раз повезет",
+                  "возможно..."]
+
+    fon = pygame.transform.scale(load_image('image/gameover.jpg'), (WIDTH, HEIGHT))
+    sc.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 700
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('yellow'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        sc.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        pygame.display.flip()
+
 
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера
@@ -142,7 +194,7 @@ class Particle(pygame.sprite.Sprite):
     for scale in (5, 10, 20):
         fire.append(pygame.transform.scale(fire[0], (scale, scale)))
 
-    def __init__(self, pos,dx,dy, screen_rect):
+    def __init__(self, pos, dx, dy, screen_rect):
         super().__init__(all_sprites)
         self.image = random.choice(self.fire)
         self.rect = self.image.get_rect()
@@ -170,10 +222,10 @@ class Particle(pygame.sprite.Sprite):
 GRAVITY = 1
 
 
-def create_particles(position,screen_rect):
+def create_particles(position, screen_rect):
     # количество создаваемых частиц
     particle_count = 20
     # возможные скорости
     numbers = range(-5, 6)
     for _ in range(particle_count):
-        Particle(position, random.choice(numbers), random.choice(numbers),screen_rect)
+        Particle(position, random.choice(numbers), random.choice(numbers), screen_rect)
