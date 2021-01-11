@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 
 # создадим игрока
 hero = Player(sc, character_sprites)
-
+cur_level = 1
 running = True
 
 # создаем карту
@@ -20,7 +20,7 @@ running = True
 start = False
 play_music("data\music\main_theme.mp3")
 start_screen()
-generate_new_level()
+generate_new_level(cur_level)
 while running:
     sc.fill((0, 0, 0))
     for event in pygame.event.get():
@@ -120,10 +120,10 @@ while running:
         # заново генерируем лабиринт
         print("new level")
         text_map = map_generation(map_width, map_height)
-        generate_new_level()
+        generate_new_level(cur_level)
         hero.x, hero.y = 1, 1
         # break
-    draw_map()
+    draw_map(cur_level)
     # рисуем игрока
     for i in range(map_height):
         for j in range(map_width):

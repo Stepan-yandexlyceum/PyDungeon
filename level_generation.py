@@ -1,6 +1,6 @@
 import pygame
 from Items import *
-from functions import sc, texture_floor, character_sprites, cur_level
+from functions import sc, texture_floor, character_sprites
 
 # количество предметов на каждом уровне - монстры, оружие,броня, зелья
 level1 = [5, 6, 5, 8]
@@ -15,7 +15,7 @@ armor = []
 potions = []
 
 
-def generate_new_level():
+def generate_new_level(cur_level):
     for i in range(all_levels[cur_level - 1][0]):
         monster = Enemy('enemy', random.choice(["Ghost", "Minotaur", "Golem"]), character_sprites)
         enemies.append(monster)
@@ -32,8 +32,8 @@ def generate_new_level():
         potions.append(potion)
 
 
-def draw_map():
-    texture_wall = update_wall_color()
+def draw_map(cur_level):
+    texture_wall = update_wall_color(cur_level)
     # рисуем карту
     for i in range(map_height):
         for j in range(map_width):

@@ -6,7 +6,6 @@ import random
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # текущий уровень
-cur_level = 1
 all_logs = []
 
 
@@ -39,7 +38,7 @@ def print_log():
         sc.blit(string_rendered, intro_rect)
 
 
-def update_wall_color():
+def update_wall_color(cur_level):
     if cur_level == 1:
         texture_wall = load_image("image/Brick_Wall_009.jpg")
         texture_wall = pygame.transform.scale(texture_wall, (cell_size * 2, cell_size * 2))
