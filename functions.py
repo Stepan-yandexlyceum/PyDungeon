@@ -37,6 +37,8 @@ blood_screen = load_image("image/BloodOverlay.png")
 blood_screen = pygame.transform.scale(blood_screen, (WIDTH, HEIGHT))
 # создадим группу, содержащую все спрайты
 all_sprites = pygame.sprite.Group()
+equipment_sprites = pygame.sprite.Group()
+inventory_sprites = pygame.sprite.Group()
 character_sprites = pygame.sprite.Group()
 
 

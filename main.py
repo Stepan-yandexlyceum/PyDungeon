@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 from settings import *
-from player import Player
+from player import *
 from map import *
 from Character import Character
 from Items import *
@@ -16,8 +16,15 @@ pygame.init()
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
 
+hammer = Weapon("Hammer", "Hammer", all_sprites)
+legs = Armor("Leg_armor1", "Leg_armor1", all_sprites)
+
 # создадим игрока
-hero = Player(sc, character_sprites)
+hero = Player(sc, character_sprites, weapon=hammer, leg=legs)
+
+draw_player_in_inventory()
+button_del = Button(1300, 600, 100, 30, 'удалить')
+button_use = Button(1275, 650, 150, 30, 'использовать')
 
 running = True
 
@@ -27,15 +34,26 @@ list_corridors = get_corridors(text_map)
 
 # основной цикл отрисовки
 start = False
-play_music("data\music\main_theme.mp3")
+#play_music("data\music\main_theme.mp3")
 start_screen()
 
 while running:
     sc.fill((0, 0, 0))
+    inventory = hero.get_inventory()
     for event in pygame.event.get():
         sc.fill((0, 0, 0))
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            inventory.get_click(event.pos)
+            if button_del.push_button(event.pos):
+                inventory.clear_cell()
+            if button_use.push_button(event.pos):
+                if inventory.get_selected_cell() != "":
+                    obj = inventory.get_selected_cell()
+                    if obj is Weapon:
+                        old_w = hero.get_weapon()
+                        
         if event.type == pygame.KEYDOWN:
             # сохраняем предыдущую позицию игрока
             prev_pos = (hero.x, hero.y)
@@ -72,22 +90,22 @@ while running:
             # TODO: добавить в класс игрока метод add_inventory(item) для добавления предмета в инвентарь
             for weapon in weapons:
                 if (hero.x, hero.y) == weapon.get_pos():
-                    # hero.add_inventory(weapon)
+                    inventory.add_object(weapon)
                     weapons.remove(weapon)
             for arm in armor:
                 if (hero.x, hero.y) == arm.get_pos():
-                    # hero.add_inventory(arm)
+                    inventory.add_object(arm)
                     armor.remove(arm)
             for potion in potions:
                 if (hero.x, hero.y) == potion.get_pos():
-                    # hero.add_inventory(potion)
+                    inventory.add_object(potion)
                     potions.remove(potion)
     # проверяем здоровье игрока
     if hero.health <= 0:
         running = False
 
     if hero.x >= map_width - 1:
-        door_sound()
+        #door_sound()
         level2_screen()
         cur_level += 1
         # map_width += 4
@@ -96,19 +114,43 @@ while running:
         print("new level")
         new_map()
         hero.x, hero.y = 1, 1
+        player_pos = (1, 1)
         # break
     draw_map()
 
     # рисуем полостку здоровья
     pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, 10 + hero.health * 10, 10))
     sc.blit(hp_bar, (0, HEIGHT - 25, 200, 10))
-    if hero.get_is_inventory_print:
-        pygame.draw.line(sc, (255, 0, 0), (1200, 0), (1200, 800), 2)
+
+    if hero.get_is_inventory_print():
+        pygame.draw.line(sc, (255, 255, 255), (1200, 0), (1200, 800), 2)
+        pygame.draw.rect(sc, (255, 255, 255), (1250, 30, 33, 33), width=1)
+        pygame.draw.rect(sc, (255, 255, 255), (1250, 62, 33, 33), width=1)
+        pygame.draw.rect(sc, (255, 255, 255), (1417, 30, 33, 33), width=1)
+        pygame.draw.rect(sc, (255, 255, 255), (1417, 62, 33, 33), width=1)
+        
+        inventory.render(sc)
+        inventory.underline_selected_cell()
+
+    button_del.draw()
+    button_use.draw()
+
     # TODO: fix this
     all_sprites.update()
     all_sprites.draw(sc)
+
+    inventory_sprites.update()
+    inventory_sprites.draw(sc)
+
+    equipment_sprites.update()
+    equipment_sprites.draw(sc)
+
+    character_sprites.update()
     character_sprites.draw(sc)
     if hero.health < 5:
         sc.blit(blood_screen, (0, 0))
+
+    hero.inventory = inventory
+    
     pygame.display.flip()
     clock.tick(FPS)
