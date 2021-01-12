@@ -12,11 +12,8 @@ pygame.init()
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
 
-hammer = Weapon("weapon", "Double_Axe", all_sprites)
-legs = Armor("armor", "Leg_armor1", all_sprites)
-
 # создадим игрока
-hero = Player(sc, character_sprites, weapon=hammer)
+hero = Player(sc, character_sprites)
 
 draw_player_in_inventory()
 button_del = Button(1300, 600, 100, 30, 'удалить')
@@ -48,9 +45,20 @@ while running:
                 if inventory.get_selected_cell() != ('', '') and inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] != '':
                     obj = inventory.get_selected_cell()
                     if obj.get_type() == "weapon":
-                        pass
-                        # old_w = hero.replace_weapon(obj)
-                        # inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+                        old_w = hero.replace_weapon(obj)
+                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+                    if obj.get_name() == "Helmet1" or obj.get_name() == 'Helmet2':
+                        old_w = hero.replace_helmet(obj)
+                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+                    
+                    if obj.get_name() == "Cuiras1" or obj.get_name() == 'Cuiras2':
+                        old_w = hero.replace_armor(obj)
+                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+                    if obj.get_name() == "Leg_armor1" or obj.get_name() == 'Leg_armor1':
+                        old_w = hero.replace_leg(obj)
+                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
 
                     if obj.get_type() == "potion":
 
@@ -200,12 +208,21 @@ while running:
     sc.blit(frame, (0, HEIGHT - 100, cell_size, cell_size))
     if hero.weapon:
         sc.blit(hero.weapon.image, (cell_size, HEIGHT - 100, cell_size, cell_size))
+        sc.blit(hero.weapon.image, (1250, 30))
     sc.blit(frame, (cell_size, HEIGHT - 100, cell_size, cell_size))
     if hero.armor:
         sc.blit(hero.armor.image, (cell_size * 2, HEIGHT - 100, cell_size, cell_size))
+        sc.blit(hero.armor.image, (1250, 63))
+    if hero.helmet:
+        sc.blit(hero.helmet.image, (1418, 30))
+
+    if hero.leg:
+        sc.blit(hero.leg.image, (1418, 63))
+
     sc.blit(frame, (cell_size * 2, HEIGHT - 100, cell_size, cell_size))
     if hero.get_is_inventory_print:
         pygame.draw.line(sc, (255, 0, 0), (1200, 0), (1200, 800), 2)
+    hero.print_inventory()
     all_sprites.update()
     all_sprites.draw(sc)
     print_log()

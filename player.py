@@ -23,6 +23,9 @@ class Player(Character):
 
         self.is_inventory_print = False
 
+        if self.weapon != '':
+                    self.weapon.image = pygame.transform.scale(self.weapon.image, (30, 30))
+
     def pos(self):
         return self.x, self.y
 
@@ -95,43 +98,20 @@ class Player(Character):
                 sc = pygame.display.set_mode((WIDTH, HEIGHT))
             else:
                 sc = pygame.display.set_mode((WIDTH_MAP_AND_INVENTORY, HEIGHT))
-                
-                if self.weapon != '':
-                    weapon_sprite = pygame.sprite.Sprite()
-                    weapon_sprite.image = self.weapon.get_image()
-                    weapon_sprite.image = pygame.transform.scale(weapon_sprite.image, (30, 30))
-                    weapon_sprite.rect = weapon_sprite.image.get_rect()
-                    weapon_sprite.rect.x = 1250
-                    weapon_sprite.rect.y = 30
-                    equipment_sprites.add(weapon_sprite)
 
+                if self.weapon != '':
+                    self.weapon.image = pygame.transform.scale(self.weapon.image, (30, 30))
+                    
 
                 if self.armor != '':
-                    armor_sprite = pygame.sprite.Sprite()
-                    armor_sprite.image = self.armor.get_image()
-                    armor_sprite.rect = weapon_sprite.image.get_rect()
-                    armor_sprite.image = pygame.transform.scale(armor_sprite.image, (30, 30))
-                    armor_sprite.rect.x = 1250
-                    armor_sprite.rect.y = 63
-                    equipment_sprites.add(armor_sprite)
-
+                    self.armor.image = pygame.transform.scale(self.armor.image, (30, 30))
+                    
                 if self.helmet != '':
-                    helmet_sprite = pygame.sprite.Sprite()
-                    helmet_sprite.image = self.helmet.get_image()
-                    helmet_sprite.rect = weapon_sprite.image.get_rect()
-                    helmet_sprite.image = pygame.transform.scale(helmet_sprite.image, (30, 30))
-                    helmet_sprite.rect.x = 1418
-                    helmet_sprite.rect.y = 30
-                    equipment_sprites.add(helmet_sprite)
-
+                    self.helmet.image = pygame.transform.scale(self.helmet.image, (30, 30))
+                    
                 if self.leg != '':
-                    leg_sprite = pygame.sprite.Sprite()
-                    leg_sprite.image = self.leg.get_image()
-                    leg_sprite.rect = weapon_sprite.image.get_rect()
-                    leg_sprite.image = pygame.transform.scale(leg_sprite.image, (30, 30))
-                    leg_sprite.rect.x = 1418
-                    leg_sprite.rect.y = 63
-                    equipment_sprites.add(leg_sprite)
+                    self.leg.image = pygame.transform.scale(self.leg.image, (30, 30))
+                    
 
             self.is_inventory_print = not self.is_inventory_print
 
@@ -152,32 +132,26 @@ class Player(Character):
             return self.weapon
 
     def replace_armor(self, armor):
-        if armor is Armor:
-            answer = self.armor
-            self.armor = armor
-            return answer
-        return ''
+        answer = self.armor
+        self.armor = armor
+        return answer
+
 
     def replace_helmet(self, helmet):
-        if helmet is Armor:
-            answer = self.helmet
-            self.helmet = helmet
-            return answer
-        return ''
+        answer = self.helmet
+        self.helmet = helmet
+        return answer
+
 
     def replace_leg(self, leg):
-        if leg is Armor:
-            answer = self.leg
-            self.leg = leg
-            return answer
-        return ''
+        answer = self.leg
+        self.leg = leg
+        return answer
 
     def replace_weapon(self, weapon):
-        if weapon is Weapon:
-            answer = self.weapon
-            self.weapon = weapon
-            return answer
-        return ''
+        weapon, self.weapon = self.weapon, weapon
+        return weapon
+
 
 
 

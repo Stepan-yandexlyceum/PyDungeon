@@ -21,6 +21,10 @@ class Item(pygame.sprite.Sprite):
     def get_pos(self):
         return self.x, self.y
 
+    def get_name(self):
+        return self.name
+
+
     def generate_pos(self):
         # генерируем положение монстра
         ok = False
@@ -128,3 +132,6 @@ class Potion(Item):
 
     def get_name(self):
         return self.name
+
+    def get_type(self):
+        return self.type
