@@ -16,14 +16,11 @@ class Player(Character):
         self.rect = pygame.Rect(self.x * cell_size, self.y * cell_size, cell_size, cell_size)
         self.direction = 'right'
         self.health = 20
-<<<<<<< HEAD
 
         self.inventory = Board_Inventory()
-=======
         self.max_health = 20
         self.weapon = weapon
-        self.inventory = [None for i in range(15)]
->>>>>>> 1f0424d2a09177c97830f4c41e19d6299294be74
+
         self.is_inventory_print = False
 
     def pos(self):
@@ -97,8 +94,8 @@ class Player(Character):
             if self.is_inventory_print:
                 sc = pygame.display.set_mode((WIDTH, HEIGHT))
             else:
-<<<<<<< HEAD
                 sc = pygame.display.set_mode((WIDTH_MAP_AND_INVENTORY, HEIGHT))
+                
                 if self.weapon != '':
                     weapon_sprite = pygame.sprite.Sprite()
                     weapon_sprite.image = self.weapon.get_image()
@@ -107,6 +104,7 @@ class Player(Character):
                     weapon_sprite.rect.x = 1250
                     weapon_sprite.rect.y = 30
                     equipment_sprites.add(weapon_sprite)
+
 
                 if self.armor != '':
                     armor_sprite = pygame.sprite.Sprite()
@@ -134,9 +132,6 @@ class Player(Character):
                     leg_sprite.rect.x = 1418
                     leg_sprite.rect.y = 63
                     equipment_sprites.add(leg_sprite)
-=======
-                sc = pygame.display.set_mode((WIDTH + 300, HEIGHT))
->>>>>>> 1f0424d2a09177c97830f4c41e19d6299294be74
 
             self.is_inventory_print = not self.is_inventory_print
 
@@ -226,6 +221,7 @@ class Board_Inventory:
         if self.selected_cell != ("", "") and self.board[self.selected_cell[0]][self.selected_cell[1]] != "":
             self.board[self.selected_cell[0]][self.selected_cell[1]].kill()
             inventory_sprites.remove(self.board[self.selected_cell[0]][self.selected_cell[1]])
+            all_sprites.remove(self.board[self.selected_cell[0]][self.selected_cell[1]])
             self.board[self.selected_cell[0]][self.selected_cell[1]] = ""
 
     def underline_selected_cell(self):

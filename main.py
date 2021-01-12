@@ -1,12 +1,8 @@
 import pygame
-<<<<<<< HEAD
 import os
 import sys
 from settings import *
 from player import *
-=======
-from player import Player
->>>>>>> 1f0424d2a09177c97830f4c41e19d6299294be74
 from map import *
 from music_player import *
 from level_generation import *
@@ -16,21 +12,18 @@ pygame.init()
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
 
-hammer = Weapon("Hammer", "Hammer", all_sprites)
-legs = Armor("Leg_armor1", "Leg_armor1", all_sprites)
+hammer = Weapon("weapon", "Double_Axe", all_sprites)
+legs = Armor("armor", "Leg_armor1", all_sprites)
 
 # создадим игрока
-<<<<<<< HEAD
-hero = Player(sc, character_sprites, weapon=hammer, leg=legs)
+hero = Player(sc, character_sprites, weapon=hammer)
 
 draw_player_in_inventory()
 button_del = Button(1300, 600, 100, 30, 'удалить')
 button_use = Button(1275, 650, 150, 30, 'использовать')
 
-=======
 hero = Player(sc, character_sprites)
 cur_level = 1
->>>>>>> 1f0424d2a09177c97830f4c41e19d6299294be74
 running = True
 
 # создаем карту
@@ -51,23 +44,38 @@ while running:
             if button_del.push_button(event.pos):
                 inventory.clear_cell()
             if button_use.push_button(event.pos):
-                if inventory.get_selected_cell() != "":
+  
+                if inventory.get_selected_cell() != ('', '') and inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] != '':
                     obj = inventory.get_selected_cell()
-                    if obj is Weapon:
-                        old_w = hero.get_weapon()
+                    if obj.get_type() == "weapon":
+                        pass
+                        # old_w = hero.replace_weapon(obj)
+                        # inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+                    if obj.get_type() == "potion":
+
+                        if obj.get_name() == "Small_health":
+                            if hero.health + 5 <= hero.max_health:
+                                hero.health += 5
+                            else:
+                                hero.health = hero.max_health
+                        elif potion.name == "Small_strength":
+                            hero.max_health += 5
+                        inventory.clear_cell()
+                        print(inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]])
                         
         if event.type == pygame.KEYDOWN:
             # сохраняем предыдущую позицию игрока
             prev_pos = (hero.x, hero.y)
             hero.movement()
-            step_sound()
+            #step_sound()
             hero.print_inventory()
             # проверяем на столкновения с предметами
             for enemy in enemies:
                 if (hero.x, hero.y) == enemy.get_pos():
                     print("hit")
                     # откатываем игрока на предыдущую клетку
-                    hero.x, hero.y = prev_pos
+                    #hero.x, hero.y = prev_pos
                     character_sprites.draw(sc)
 
                     # если у героя есть броня
@@ -106,28 +114,18 @@ while running:
             # TODO: добавить в класс игрока метод add_inventory(item) для добавления предмета в инвентарь
             for weapon in weapons:
                 if (hero.x, hero.y) == weapon.get_pos():
-<<<<<<< HEAD
-                    inventory.add_object(weapon)
-                    weapons.remove(weapon)
-            for arm in armor:
-                if (hero.x, hero.y) == arm.get_pos():
-                    inventory.add_object(arm)
-                    armor.remove(arm)
-            for potion in potions:
-                if (hero.x, hero.y) == potion.get_pos():
-                    inventory.add_object(potion)
-=======
-                    # hero.add_inventory(weapon)
-                    hero.weapon = weapon
+                    if hero.weapon == '':
+                        hero.weapon = weapon
+                    else:
+                        inventory.add_object(weapon)
                     inventory_sound("weapon")
                     add_to_log("Ты подобрал {}".format(weapon.name))
                     add_to_log("Оно имеет {} урона".format(weapon.damage))
                     weapons.remove(weapon)
             for arm in armor:
                 if (hero.x, hero.y) == arm.get_pos():
-                    # hero.add_inventory(arm)
-                    hero.armor = arm
                     inventory_sound()
+                    inventory.add_object(arm)
                     add_to_log("Ты подобрал {}".format(arm.name))
                     add_to_log("Оно блокирует {} урона".format(arm.defence))
                     armor.remove(arm)
@@ -135,18 +133,13 @@ while running:
                 if (hero.x, hero.y) == potion.get_pos():
                     # hero.add_inventory(potion)
                     inventory_sound()
+                    inventory.add_object(potion)
                     add_to_log("Ты подобрал {}".format(potion.name))
                     if potion.name == "Small_health":
-                        if hero.health + 5 <= hero.max_health:
-                            hero.health += 5
-                        else:
-                            hero.health = hero.max_health
                         add_to_log("Оно восстанавливает 5 ед. здоровья")
                     elif potion.name == "Small_strength":
-                        hero.max_health += 5
                         hp_bar = pygame.transform.scale(hp_bar, (hero.max_health * 10, 20))
                         add_to_log("Оно увеличивает максимальный запас здоровья на 5 ед.")
->>>>>>> 1f0424d2a09177c97830f4c41e19d6299294be74
                     potions.remove(potion)
     # проверяем здоровье игрока
     if hero.health <= 0:
@@ -175,7 +168,6 @@ while running:
     # рисуем полостку здоровья
     pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, 10 + hero.health * 10, 10))
     sc.blit(hp_bar, (0, HEIGHT - 25, 200, 10))
-<<<<<<< HEAD
 
     if hero.get_is_inventory_print():
         pygame.draw.line(sc, (255, 255, 255), (1200, 0), (1200, 800), 2)
@@ -202,7 +194,7 @@ while running:
 
     character_sprites.update()
     character_sprites.draw(sc)
-=======
+
     # рисуем экипированные предметы
     sc.blit(hero.image, (0, HEIGHT - 100, cell_size, cell_size))
     sc.blit(frame, (0, HEIGHT - 100, cell_size, cell_size))
@@ -218,7 +210,6 @@ while running:
     all_sprites.draw(sc)
     print_log()
     # character_sprites.draw(sc)
->>>>>>> 1f0424d2a09177c97830f4c41e19d6299294be74
     if hero.health < 5:
         sc.blit(blood_screen, (0, 0))
 
