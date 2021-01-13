@@ -7,6 +7,7 @@ from map import *
 from music_player import *
 from level_generation import *
 
+
 pygame.init()
 
 # установка количества кадров в секунду
@@ -56,9 +57,14 @@ while running:
                         old_w = hero.replace_armor(obj)
                         inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
 
-                    if obj.get_name() == "Leg_armor1" or obj.get_name() == 'Leg_armor1':
+                    if obj.get_name() == "Leg_armor1" or obj.get_name() == 'Leg_armor2':
                         old_w = hero.replace_leg(obj)
                         inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+                    if obj.get_name() == "Arm_armor1" or obj.get_name() == 'Arm_armor2':
+                        old_w = hero.replace_bracers(obj)
+                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
 
                     if obj.get_type() == "potion":
 
@@ -89,7 +95,7 @@ while running:
                     # если у героя есть броня
                     if hero.armor:
                         if enemy.damage <= hero.armor.defence:
-                            hero.health -= (enemy.damage - hero.armor.defence)
+                            hero.taking_damage(enemy.damage)
                             add_to_log("Тебя ударил {}".format(enemy.name))
                         else:
                             add_to_log("Тебя ударил {}, но твоя броня слишком крепкая,".format(enemy.name))
@@ -139,7 +145,6 @@ while running:
                     armor.remove(arm)
             for potion in potions:
                 if (hero.x, hero.y) == potion.get_pos():
-                    # hero.add_inventory(potion)
                     inventory_sound()
                     inventory.add_object(potion)
                     add_to_log("Ты подобрал {}".format(potion.name))
@@ -179,10 +184,11 @@ while running:
 
     if hero.get_is_inventory_print():
         pygame.draw.line(sc, (255, 255, 255), (1200, 0), (1200, 800), 2)
-        pygame.draw.rect(sc, (255, 255, 255), (1250, 30, 33, 33), width=1)
-        pygame.draw.rect(sc, (255, 255, 255), (1250, 62, 33, 33), width=1)
-        pygame.draw.rect(sc, (255, 255, 255), (1417, 30, 33, 33), width=1)
-        pygame.draw.rect(sc, (255, 255, 255), (1417, 62, 33, 33), width=1)
+        draw_white_rect(1241, 21)
+        draw_white_rect(1241, 70)
+        draw_white_rect(1408, 21)
+        draw_white_rect(1408, 70)
+        draw_white_rect(1325, 150)
         
         inventory.render(sc)
         inventory.underline_selected_cell()
@@ -208,16 +214,19 @@ while running:
     sc.blit(frame, (0, HEIGHT - 100, cell_size, cell_size))
     if hero.weapon:
         sc.blit(hero.weapon.image, (cell_size, HEIGHT - 100, cell_size, cell_size))
-        sc.blit(hero.weapon.image, (1250, 30))
+        sc.blit(hero.weapon.image, (1325, 150))
     sc.blit(frame, (cell_size, HEIGHT - 100, cell_size, cell_size))
     if hero.armor:
         sc.blit(hero.armor.image, (cell_size * 2, HEIGHT - 100, cell_size, cell_size))
-        sc.blit(hero.armor.image, (1250, 63))
+        sc.blit(hero.armor.image, (1241, 70))
     if hero.helmet:
-        sc.blit(hero.helmet.image, (1418, 30))
+        sc.blit(hero.helmet.image, (1408, 21))
 
     if hero.leg:
-        sc.blit(hero.leg.image, (1418, 63))
+        sc.blit(hero.leg.image, (1408, 70))
+
+    if hero.bracers:
+        sc.blit(hero.bracers.image, (1241, 21))
 
     sc.blit(frame, (cell_size * 2, HEIGHT - 100, cell_size, cell_size))
     if hero.get_is_inventory_print:

@@ -45,9 +45,9 @@ class Item(pygame.sprite.Sprite):
 class Enemy(Item):
     # название: [урон, здоровье, картинка]
     enemy_lib = {
-        "Ghost": [5, 8, "image\Wraith_01_Idle_000.png"],
-        "Minotaur": [4, 15, "image\Minotaur_01_Idle_000.png"],
-        "Golem": [7, 20, "image\Golem_01_Idle.png"]
+        "Ghost": [7, 10, "image\Wraith_01_Idle_000.png"],
+        "Minotaur": [6, 17, "image\Minotaur_01_Idle_000.png"],
+        "Golem": [10, 25, "image\Golem_01_Idle.png"]
     }
 
     def __init__(self, type, name, sprites_group):

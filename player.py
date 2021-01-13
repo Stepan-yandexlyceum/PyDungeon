@@ -3,6 +3,8 @@ from map import text_map
 from functions import *
 from settings import *
 from Character import *
+from partricle_blood import *
+
 import pygame
 
 
@@ -10,12 +12,13 @@ class Player(Character):
     image = pygame.image.load("data/image/knight.png")
     image = pygame.transform.scale(image, (cell_size, cell_size))
 
-    def __init__(self, screen, sprites, weapon="", armor="", helmet="", leg=""):
-        super().__init__(weapon, armor, helmet, leg, sprites)
+    def __init__(self, screen, sprites, weapon="", armor="", helmet="", leg="", bracers=""):
+        super().__init__(weapon, armor, helmet, leg, bracers, sprites)
         self.x, self.y = player_pos
         self.rect = pygame.Rect(self.x * cell_size, self.y * cell_size, cell_size, cell_size)
         self.direction = 'right'
-        self.health = 20
+        self.health = 25
+        self.defence = 0
 
         self.inventory = Board_Inventory()
         self.max_health = 20
@@ -99,49 +102,32 @@ class Player(Character):
             else:
                 sc = pygame.display.set_mode((WIDTH_MAP_AND_INVENTORY, HEIGHT))
 
-                if self.weapon != '':
-                    self.weapon.image = pygame.transform.scale(self.weapon.image, (30, 30))
-                    
-
-                if self.armor != '':
-                    self.armor.image = pygame.transform.scale(self.armor.image, (30, 30))
-                    
-                if self.helmet != '':
-                    self.helmet.image = pygame.transform.scale(self.helmet.image, (30, 30))
-                    
-                if self.leg != '':
-                    self.leg.image = pygame.transform.scale(self.leg.image, (30, 30))
-                    
-
             self.is_inventory_print = not self.is_inventory_print
 
     def get_armor(self):
-        if self.armor is Armor:
-            return self.armor
+        return self.armor
 
     def get_helmet(self):
-        if self.helmet is Armor:
-            return self.helmet
+        return self.helmet
 
     def get_leg(self):
-        if self.leg is Armor:
-            return self.leg
+        return self.leg
 
     def get_weapon(self):
-        if self.weapon is Weapon:
-            return self.weapon
+        return self.weapon
+
+    def get_bracers(self):
+        return self.bracers
 
     def replace_armor(self, armor):
         answer = self.armor
         self.armor = armor
         return answer
 
-
     def replace_helmet(self, helmet):
         answer = self.helmet
         self.helmet = helmet
         return answer
-
 
     def replace_leg(self, leg):
         answer = self.leg
@@ -152,7 +138,27 @@ class Player(Character):
         weapon, self.weapon = self.weapon, weapon
         return weapon
 
+    def replace_bracers(self, bracers):
+        bracers, self.bracers = self.bracers, bracers
+        return bracers
 
+    def update_defence(self):
+        if self.helmet != '':
+            self.defence += self.helmet.get_defence()
+
+        if self.armor != '':
+            self.defence += self.armor.get_defence()
+
+        if self.leg != '':
+            self.defence += self.leg.get_defence()
+
+        if self.bracers != '':
+            self.defence += self.bracers.get_defence()
+
+    def taking_damage(self, damage):
+        self.update_defence()
+        if damage >= self.defence:
+            self.health = self.health - damage + self.defence
 
 
 class Board_Inventory:
@@ -160,25 +166,29 @@ class Board_Inventory:
         self.width = 4
         self.height = 5
         self.board = [[""] * self.height for i in range(self.width)]
-        self.left = 1286
+        self.left = 1250
         self.top = 300
-        self.cell_size = 32
         self.selected_cell = ("", "")
-        
 
     def render(self, screen):
-        for i in range(0, self.height * self.cell_size, self.cell_size):
-            for j in range(0, self.width * self.cell_size, self.cell_size):
+        for i in range(0, self.height * cell_size, cell_size):
+            for j in range(0, self.width * cell_size, cell_size):
                 pygame.draw.rect(screen, pygame.Color('white'), (
-                    j + self.left, i + self.top, self.cell_size, self.cell_size
+                    j + self.left, i + self.top, cell_size, cell_size
                 ), 1)
+                
+        for i in range(self.width):
+            for ii in range(self.height):
+                if self.board[i][ii] != '':
+                    sc.blit(self.board[i][ii].image, (self.left + cell_size * i, self.top + cell_size * ii))
+
 
     def get_cell(self, mouse_pos):
-        height = self.top + self.height * self.cell_size
-        widht = self.left + self.width * self.cell_size
+        height = self.top + self.height * cell_size
+        widht = self.left + self.width * cell_size
         if widht > mouse_pos[0] and mouse_pos[1] > self.top and height > mouse_pos[1] and mouse_pos[0] > self.left:
-            height_answer = int((mouse_pos[1] - self.top) / self.cell_size)
-            widht_answer = int((mouse_pos[0] - self.left) / self.cell_size)
+            height_answer = int((mouse_pos[1] - self.top) / cell_size)
+            widht_answer = int((mouse_pos[0] - self.left) / cell_size)
             return widht_answer, height_answer
         else:
             return None
@@ -200,20 +210,15 @@ class Board_Inventory:
 
     def underline_selected_cell(self):
         if self.selected_cell != ("", ""):
-            pygame.draw.rect(sc, (255, 0, 0), (self.left + self.selected_cell[0] * 32, self.top + self.selected_cell[1] * 32, 32, 32), 1)
+            pygame.draw.rect(sc, (255, 0, 0), (self.left + self.selected_cell[0] * cell_size,
+                self.top + self.selected_cell[1] * cell_size, cell_size, cell_size), 1)
 
     def add_object(self, obj):
         for i in range(self.width):
             for ii in range(self.height):
                 if self.board[i][ii] == "":
+                    obj.image = pygame.transform.scale(obj.image, (cell_size, cell_size))
                     self.board[i][ii] = obj
-                    sprite = pygame.sprite.Sprite()
-                    sprite.image = self.board[i][ii].get_image()
-                    sprite.rect = sprite.image.get_rect()
-                    sprite.image = pygame.transform.scale(sprite.image, (30, 30))
-                    sprite.rect.x = self.left + i * 32
-                    sprite.rect.y = self.top + ii * 32
-                    inventory_sprites.add(sprite)
                     return
 
     def get_selected_cell(self):
@@ -252,6 +257,6 @@ def draw_player_in_inventory():
     hero_in_inventory.rect = hero_in_inventory.image.get_rect()
 
     hero_in_inventory.rect.x = 1300
-    hero_in_inventory.rect.y = 0
+    hero_in_inventory.rect.y = 18
 
     all_sprites.add(hero_in_inventory)

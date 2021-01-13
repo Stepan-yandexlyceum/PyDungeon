@@ -25,6 +25,10 @@ def add_to_log(text):
         del all_logs[0]
 
 
+def draw_white_rect(x, y):
+    pygame.draw.rect(sc, (255, 255, 255), (x, y, 50, 50), width=1)
+
+
 def print_log():
     font = pygame.font.Font(None, 25)
     text_coord = 25
