@@ -22,11 +22,11 @@ class Player(Character):
         self.x, self.y = player_pos
         self.rect = pygame.Rect(self.x * cell_size, self.y * cell_size, cell_size, cell_size)
         self.direction = 'right'
-        self.health = 20
+        self.health = 25
         self.defence = 0
 
         self.inventory = Board_Inventory()
-        self.max_health = 20
+        self.max_health = 25
         self.weapon = weapon
 
         self.is_inventory_print = False

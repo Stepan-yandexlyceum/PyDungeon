@@ -58,7 +58,7 @@ def update_wall_color(cur_level):
 texture_floor = load_image("image/dark-brick-wall-texture_1048-7626.jpg")
 texture_floor = pygame.transform.scale(texture_floor, (cell_size, cell_size))
 hp_bar = load_image("image/hud/frame.png")
-hp_bar = pygame.transform.scale(hp_bar, (240, 20))
+hp_bar = pygame.transform.scale(hp_bar, (275, 20))
 door = load_image("image/castledoors.png")
 door = pygame.transform.scale(door, (cell_size, cell_size))
 frame = load_image("image/hud/button_1(frame).png")
@@ -191,6 +191,34 @@ def gameover_screen():
         pygame.display.flip()
 
 
+def victory_screen():
+    intro_text = ["Это победа!",
+                  "Вы смогли выбраться из подземелья,",
+                  "что обеспечит Вам богатство и славу на всю жизнь"]
+
+    fon = pygame.transform.scale(load_image('image/victory.jpg'), (WIDTH, HEIGHT))
+    sc.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 700
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('yellow'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        sc.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        pygame.display.flip()
+
+
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера
     fire = [load_image("image/bloodsplats.png")]
@@ -224,7 +252,7 @@ class Particle(pygame.sprite.Sprite):
             self.kill()
 
 
-GRAVITY = 1
+GRAVITY = 0.5
 
 
 def create_particles(position, screen_rect):

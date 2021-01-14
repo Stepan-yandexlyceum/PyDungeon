@@ -70,8 +70,9 @@ while running:
                                 hero.health += 5
                             else:
                                 hero.health = hero.max_health
-                        elif potion.name == "Small_strength":
+                        elif obj.get_name() == "Small_strength":
                             hero.max_health += 5
+                            hp_bar = pygame.transform.scale(hp_bar, (hero.max_health * 10, 20))
                         inventory.clear_cell()
                         print(inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]])
 
@@ -82,7 +83,6 @@ while running:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_e]:
                 hero.print_inventory()
-                clock.tick(FPS)
             else:
                 step_sound()
             # проверяем на столкновения с предметами
@@ -95,8 +95,8 @@ while running:
 
                     # если у героя есть броня
                     if hero.armor:
-                        if enemy.damage <= hero.armor.defence:
-                            hero.taking_damage(enemy.damage)
+                        if enemy.damage * cur_level <= hero.armor.defence:
+                            hero.taking_damage(enemy.damage * cur_level)
                             add_to_log("Тебя ударил {}".format(enemy.name))
                         else:
                             add_to_log("Тебя ударил {}, но твоя броня слишком крепкая,".format(enemy.name))
@@ -153,7 +153,6 @@ while running:
                     if potion.name == "Small_health":
                         add_to_log("Оно восстанавливает 5 ед. здоровья")
                     elif potion.name == "Small_strength":
-                        hp_bar = pygame.transform.scale(hp_bar, (hero.max_health * 10, 20))
                         add_to_log("Оно увеличивает максимальный запас здоровья на 5 ед.")
                     potions.remove(potion)
     # проверяем здоровье игрока
@@ -162,13 +161,18 @@ while running:
         running = False
         terminate()
     if hero.x >= map_width - 1:
-        # door_sound()
-        level2_screen()
+        door_sound()
         cur_level += 1
         if cur_level == 2:
             play_music("data/music/main_theme2.mp3")
-        else:
-            play_music("data/music/main_theme3.mp3")
+            level2_screen()
+        elif cur_level == 3:
+            play_music("data/music/main_theme3.ogg")
+            level3_screen()
+        elif cur_level == 4:
+            victory_screen()
+            # TODO: окно ввода имени в базу данных и просмотр других результатов
+            terminate()
         # map_width += 4
         # map_height += 4
         # заново генерируем лабиринт
@@ -184,9 +188,8 @@ while running:
             if (i, j) == (hero.x, hero.y):
                 sc.blit(hero.image, (cell_size * i, cell_size * j))
     # рисуем полостку здоровья
-    pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, 10 + hero.health * 10, 10))
-    sc.blit(hp_bar, (0, HEIGHT - 25, 200, 10))
-
+    pygame.draw.rect(sc, pygame.Color('red'), (10, HEIGHT - 20, hero.health * 10, 10))
+    sc.blit(hp_bar, (0, HEIGHT - 25))
     if hero.get_is_inventory_print():
         pygame.draw.line(sc, (255, 255, 255), (1200, 0), (1200, 800), 2)
         draw_white_rect(1241, 21)

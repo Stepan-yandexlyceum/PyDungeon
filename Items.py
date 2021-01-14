@@ -97,13 +97,13 @@ class Weapon(Item):
 class Armor(Item):
     armor_lib = {
         "Helmet1": [2, "image\helmet1.png"],
-        "Helmet2": [5, "image\helmet2.png"],
-        "Cuiras1": [5, "image\cuiras1.png"],
-        "Cuiras2": [8, "image\cuiras2.png"],
-        "Arm_armor1": [2, "image\\arm_armor1.png"],
-        "Arm_armor2": [4, "image\\arm_armor2.png"],
+        "Helmet2": [3, "image\helmet2.png"],
+        "Cuiras1": [3, "image\cuiras1.png"],
+        "Cuiras2": [5, "image\cuiras2.png"],
+        "Arm_armor1": [1, "image\\arm_armor1.png"],
+        "Arm_armor2": [2, "image\\arm_armor2.png"],
         "Leg_armor1": [1, "image\leg_armor1.png"],
-        "Leg_armor2": [3, "image\leg_armor2.png"],
+        "Leg_armor2": [2, "image\leg_armor2.png"],
     }
 
     def __init__(self, type, name, sprites_group):
