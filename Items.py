@@ -24,14 +24,13 @@ class Item(pygame.sprite.Sprite):
     def get_name(self):
         return self.name
 
-
     def generate_pos(self):
         # генерируем положение монстра
         ok = False
         while not ok:
             ok = True
             self.x, self.y = random.choice(list_corridors)
-            if (self.x, self.y) not in list_corridors or self.x == 0 or self.y == 0:
+            if (self.x, self.y) not in list_corridors or self.x == 0 or self.y == 0 or self.x == map_width - 1:
                 ok = False
         # удаляем занятое поле
         for i in range(len(list_corridors) - 1):
@@ -127,7 +126,7 @@ class Potion(Item):
     def __init__(self, type, name, sprites_group):
         super().__init__(type, name, sprites_group)
         self.image = load_image(Potion.potion_lib[name][1])
-        self.image = pygame.transform.scale(self.image, (int(cell_size*0.75), int(cell_size*0.75)))
+        self.image = pygame.transform.scale(self.image, (int(cell_size * 0.75), int(cell_size * 0.75)))
         self.rect = self.image.get_rect()
 
     def get_name(self):

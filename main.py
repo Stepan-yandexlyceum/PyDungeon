@@ -7,19 +7,16 @@ from map import *
 from music_player import *
 from level_generation import *
 
-
 pygame.init()
 
 # установка количества кадров в секунду
 clock = pygame.time.Clock()
 
-# создадим игрока
-hero = Player(sc, character_sprites)
-
 draw_player_in_inventory()
 button_del = Button(1300, 600, 100, 30, 'удалить')
 button_use = Button(1275, 650, 150, 30, 'использовать')
 
+# создадим игрока
 hero = Player(sc, character_sprites)
 cur_level = 1
 running = True
@@ -28,7 +25,7 @@ running = True
 
 # основной цикл отрисовки
 start = False
-#play_music("data\music\main_theme.mp3")
+play_music("data\music\main_theme.mp3")
 start_screen()
 generate_new_level(cur_level)
 while running:
@@ -42,8 +39,9 @@ while running:
             if button_del.push_button(event.pos):
                 inventory.clear_cell()
             if button_use.push_button(event.pos):
-  
-                if inventory.get_selected_cell() != ('', '') and inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] != '':
+
+                if inventory.get_selected_cell() != ('', '') and inventory.board[inventory.selected_cell[0]][
+                    inventory.selected_cell[1]] != '':
                     obj = inventory.get_selected_cell()
                     if obj.get_type() == "weapon":
                         old_w = hero.replace_weapon(obj)
@@ -52,7 +50,7 @@ while running:
                     if obj.get_name() == "Helmet1" or obj.get_name() == 'Helmet2':
                         old_w = hero.replace_helmet(obj)
                         inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
-                    
+
                     if obj.get_name() == "Cuiras1" or obj.get_name() == 'Cuiras2':
                         old_w = hero.replace_armor(obj)
                         inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
@@ -65,7 +63,6 @@ while running:
                         old_w = hero.replace_bracers(obj)
                         inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
 
-
                     if obj.get_type() == "potion":
 
                         if obj.get_name() == "Small_health":
@@ -77,19 +74,23 @@ while running:
                             hero.max_health += 5
                         inventory.clear_cell()
                         print(inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]])
-                        
+
         if event.type == pygame.KEYDOWN:
             # сохраняем предыдущую позицию игрока
             prev_pos = (hero.x, hero.y)
             hero.movement()
-            #step_sound()
-            hero.print_inventory()
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_e]:
+                hero.print_inventory()
+                clock.tick(FPS)
+            else:
+                step_sound()
             # проверяем на столкновения с предметами
             for enemy in enemies:
                 if (hero.x, hero.y) == enemy.get_pos():
                     print("hit")
                     # откатываем игрока на предыдущую клетку
-                    #hero.x, hero.y = prev_pos
+                    hero.x, hero.y = prev_pos
                     character_sprites.draw(sc)
 
                     # если у героя есть броня
@@ -122,6 +123,7 @@ while running:
                     # TODO: можно настроить область распространения частиц
                     screen_rect = (hero.x * cell_size, hero.y * cell_size, hero.x * cell_size + cell_size,
                                    hero.y * cell_size + cell_size)
+                    # screen_rect = (0,0,WIDTH, HEIGHT)
                     create_particles((hero.x * cell_size, hero.y * cell_size), screen_rect)
 
                     break
@@ -160,13 +162,16 @@ while running:
         running = False
         terminate()
     if hero.x >= map_width - 1:
-        #door_sound()
+        # door_sound()
         level2_screen()
         cur_level += 1
+        if cur_level == 2:
+            play_music("data/music/main_theme2.mp3")
+        else:
+            play_music("data/music/main_theme3.mp3")
         # map_width += 4
         # map_height += 4
         # заново генерируем лабиринт
-        print("new level")
         text_map = map_generation(map_width, map_height)
         generate_new_level(cur_level)
         hero.x, hero.y = 1, 1
@@ -189,7 +194,7 @@ while running:
         draw_white_rect(1408, 21)
         draw_white_rect(1408, 70)
         draw_white_rect(1325, 150)
-        
+
         inventory.render(sc)
         inventory.underline_selected_cell()
 
@@ -206,8 +211,8 @@ while running:
     equipment_sprites.update()
     equipment_sprites.draw(sc)
 
-    character_sprites.update()
-    character_sprites.draw(sc)
+    # character_sprites.update()
+    # character_sprites.draw(sc)
 
     # рисуем экипированные предметы
     sc.blit(hero.image, (0, HEIGHT - 100, cell_size, cell_size))
@@ -240,6 +245,6 @@ while running:
         sc.blit(blood_screen, (0, 0))
 
     hero.inventory = inventory
-    
+
     pygame.display.flip()
     clock.tick(FPS)

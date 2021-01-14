@@ -3,7 +3,8 @@ from map import text_map
 from functions import *
 from settings import *
 from Character import *
-from partricle_blood import *
+from music_player import step_sound
+from map import get_corridors, text_map
 
 import pygame
 
@@ -14,10 +15,14 @@ class Player(Character):
 
     def __init__(self, screen, sprites, weapon="", armor="", helmet="", leg="", bracers=""):
         super().__init__(weapon, armor, helmet, leg, bracers, sprites)
+        player_pos = (0, 1)
+        for cell in get_corridors(text_map):
+            if cell[0] == 0:
+                player_pos = cell
         self.x, self.y = player_pos
         self.rect = pygame.Rect(self.x * cell_size, self.y * cell_size, cell_size, cell_size)
         self.direction = 'right'
-        self.health = 25
+        self.health = 20
         self.defence = 0
 
         self.inventory = Board_Inventory()
@@ -27,7 +32,7 @@ class Player(Character):
         self.is_inventory_print = False
 
         if self.weapon != '':
-                    self.weapon.image = pygame.transform.scale(self.weapon.image, (30, 30))
+            self.weapon.image = pygame.transform.scale(self.weapon.image, (30, 30))
 
     def pos(self):
         return self.x, self.y
@@ -37,7 +42,6 @@ class Player(Character):
 
     def movement(self):
         keys = pygame.key.get_pressed()
-
         y = self.rect.y
         x = self.rect.x
         m_y = self.y
@@ -176,12 +180,11 @@ class Board_Inventory:
                 pygame.draw.rect(screen, pygame.Color('white'), (
                     j + self.left, i + self.top, cell_size, cell_size
                 ), 1)
-                
+
         for i in range(self.width):
             for ii in range(self.height):
                 if self.board[i][ii] != '':
                     sc.blit(self.board[i][ii].image, (self.left + cell_size * i, self.top + cell_size * ii))
-
 
     def get_cell(self, mouse_pos):
         height = self.top + self.height * cell_size
@@ -211,7 +214,7 @@ class Board_Inventory:
     def underline_selected_cell(self):
         if self.selected_cell != ("", ""):
             pygame.draw.rect(sc, (255, 0, 0), (self.left + self.selected_cell[0] * cell_size,
-                self.top + self.selected_cell[1] * cell_size, cell_size, cell_size), 1)
+                                               self.top + self.selected_cell[1] * cell_size, cell_size, cell_size), 1)
 
     def add_object(self, obj):
         for i in range(self.width):
@@ -245,8 +248,6 @@ class Button:
     def push_button(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.height and pos[1] > self.y and pos[1] < self.y + self.width:
             return True
-            
-
 
 
 def draw_player_in_inventory():

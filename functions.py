@@ -205,6 +205,7 @@ class Particle(pygame.sprite.Sprite):
         self.screen_rect = screen_rect
         # у каждой частицы своя скорость — это вектор
         self.velocity = [0, 0]
+        self.velocity[0] = random.randrange(-1, 1)
         # и свои координаты
         self.rect.x, self.rect.y = pos
 
