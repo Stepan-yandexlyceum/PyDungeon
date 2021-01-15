@@ -25,7 +25,7 @@ running = True
 
 # основной цикл отрисовки
 start = False
-play_music("data\music\main_theme.mp3")
+#play_music("data\music\main_theme.mp3")
 start_screen()
 generate_new_level(cur_level)
 while running:
@@ -57,7 +57,7 @@ while running:
                 hero.print_inventory()
             else:
                 pass
-                step_sound()
+                #step_sound()
             # проверяем на столкновения с предметами
             for enemy in enemies:
                 if (hero.x, hero.y) == enemy.get_pos():
@@ -135,18 +135,19 @@ while running:
         running = False
         terminate()
     if hero.x >= map_width - 1:
-        door_sound()
+        #door_sound()
         cur_level += 1
         if cur_level == 2:
-            play_music("data/music/main_theme2.mp3")
+            #play_music("data/music/main_theme2.mp3")
             level2_screen()
         elif cur_level == 3:
-            play_music("data/music/main_theme3.ogg")
+            #play_music("data/music/main_theme3.ogg")
             level3_screen()
+
         elif cur_level == 4:
             exit_screen()
             # TODO: окно ввода имени в базу данных и просмотр других результатов
-            terminate()
+
         # map_width += 4
         # map_height += 4
         # заново генерируем лабиринт
