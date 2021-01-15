@@ -40,43 +40,15 @@ while running:
                 inventory.clear_cell()
             if button_use.push_button(event.pos):
 
-                if inventory.get_selected_cell() != ('', '') and inventory.board[inventory.selected_cell[0]][
-                    inventory.selected_cell[1]] != '':
+                if inventory.get_selected_cell() != ('', '') and inventory.board[inventory.selected_cell[0]] \
+                        [inventory.selected_cell[1]] != '':
                     obj = inventory.get_selected_cell()
-                    if obj.get_type() == "weapon":
-                        old_w = hero.replace_weapon(obj)
-                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
-
-                    if obj.get_name() == "Helmet1" or obj.get_name() == 'Helmet2':
-                        old_w = hero.replace_helmet(obj)
-                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
-
-                    if obj.get_name() == "Cuiras1" or obj.get_name() == 'Cuiras2':
-                        old_w = hero.replace_armor(obj)
-                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
-
-                    if obj.get_name() == "Leg_armor1" or obj.get_name() == 'Leg_armor2':
-                        old_w = hero.replace_leg(obj)
-                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
-
-                    if obj.get_name() == "Arm_armor1" or obj.get_name() == 'Arm_armor2':
-                        old_w = hero.replace_bracers(obj)
-                        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
-
-                    if obj.get_type() == "potion":
-
-                        if obj.get_name() == "Small_health":
-                            if hero.health + 5 <= hero.max_health:
-                                hero.health += 5
-                            else:
-                                hero.health = hero.max_health
-                        elif obj.get_name() == "Small_strength":
-                            hero.max_health += 5
-                            hp_bar = pygame.transform.scale(hp_bar, (hero.max_health * 10, 20))
-                        inventory.clear_cell()
-                        print(inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]])
+                    inventory, hero = exchange_equipment_inventory(inventory, hero)
 
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                if inventory.get_selected_cell() != '':
+                    inventory, hero = exchange_equipment_inventory(inventory, hero)
             # сохраняем предыдущую позицию игрока
             prev_pos = (hero.x, hero.y)
             hero.movement()
@@ -84,6 +56,7 @@ while running:
             if keys[pygame.K_e]:
                 hero.print_inventory()
             else:
+                pass
                 step_sound()
             # проверяем на столкновения с предметами
             for enemy in enemies:
@@ -117,6 +90,7 @@ while running:
                     # pygame.draw.rect(sc, pygame.Color('red'),
                     #                  (enemy.x * cell_size, enemy.y * cell_size + cell_size, enemy.health, 3))
                     if enemy.health <= 0:
+                        killed_monsters += 1
                         enemy.kill()
                         enemies.remove(enemy)
                     injure_sound()
@@ -170,7 +144,7 @@ while running:
             play_music("data/music/main_theme3.ogg")
             level3_screen()
         elif cur_level == 4:
-            victory_screen()
+            exit_screen()
             # TODO: окно ввода имени в базу данных и просмотр других результатов
             terminate()
         # map_width += 4

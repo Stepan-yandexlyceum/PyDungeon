@@ -3,6 +3,7 @@ import sys
 import pygame
 from settings import *
 import random
+import sqlite3
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 # текущий уровень
@@ -218,6 +219,97 @@ def victory_screen():
                 return
         pygame.display.flip()
 
+def exit_screen():
+    button_exit = Button(575, 500, 45, 30, "Ок")
+    name = ''
+
+    fon = pygame.transform.scale(load_image('image\exit.jpg'), (WIDTH, HEIGHT))
+    sc.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    
+    title = font.render('Напиши свое имя', True, (255, 255, 255))
+
+    while True:
+        sc.blit(fon, (0, 0))
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.unicode.isalpha():
+                    name += event.unicode
+                elif event.key == K_BACKSPACE:
+                    name = name[:-1]
+                elif event.key == K_RETURN:
+                    name = ""
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_exit.push_button(event.pos):
+                    gameover(name, killed_monsters)
+        
+        text = font.render(name, True, (255, 255, 255))
+        rect = text.get_rect()
+        rect.center = (600, 400)
+        
+        button_exit.draw()
+        sc.blit(text, rect)
+        sc.blit(title, (500, 250))
+
+        pygame.display.flip()
+
+def exchange_equipment_inventory(inventory, hero):
+    obj = inventory.get_selected_cell()
+    if obj.get_type() == "weapon":
+        old_w = hero.replace_weapon(obj)
+        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+    if obj.get_name() == "Helmet1" or obj.get_name() == 'Helmet2':
+        old_w = hero.replace_helmet(obj)
+        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+                    
+    if obj.get_name() == "Cuiras1" or obj.get_name() == 'Cuiras2':
+        old_w = hero.replace_armor(obj)
+        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+    if obj.get_name() == "Leg_armor1" or obj.get_name() == 'Leg_armor2':
+        old_w = hero.replace_leg(obj)
+        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+    if obj.get_name() == "Arm_armor1" or obj.get_name() == 'Arm_armor2':
+        old_w = hero.replace_bracers(obj)
+        inventory.board[inventory.selected_cell[0]][inventory.selected_cell[1]] = old_w
+
+
+    if obj.get_type() == "potion":
+        if obj.get_name() == "Small_health":
+            if hero.health + 5 <= hero.max_health:
+                hero.health += 5
+            else:
+                hero.health = hero.max_health
+        elif obj.get_name() == "Small_strength":
+            hero.max_health += 5
+        inventory.clear_cell()
+    return inventory, hero
+
+
+class Button:
+    def __init__(self, x, y, height, width, text):
+        self.x = x
+        self.y = y
+        self.height = height
+        self.width = width
+        self.text = text
+
+    def draw(self):
+        pygame.draw.rect(sc, (255, 255, 255), (self.x, self.y, self.height, self.width), width=1)
+
+        font = pygame.font.Font(None, self.width)
+        text = font.render(self.text, True, (255, 255, 255))
+        sc.blit(text, (self.x + 5, self.y + 5))
+
+    def push_button(self, pos):
+        if pos[0] > self.x and pos[0] < self.x + self.height and pos[1] > self.y and pos[1] < self.y + self.width:
+            return True
+
 
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера
@@ -262,3 +354,16 @@ def create_particles(position, screen_rect):
     numbers = range(-5, 6)
     for _ in range(particle_count):
         Particle(position, random.choice(numbers), random.choice(numbers), screen_rect)
+
+def gameover(name, score):
+    con = sqlite3.connect("Data_Base.db")
+    cur = con.cursor()
+
+    if name == '':
+        name = 'аноним'
+
+    cur.execute(f"""INSERT INTO result_table(name, murders) VALUES('{name}', '{score}')""")
+
+    con.commit()
+    con.close()
+    terminate()
