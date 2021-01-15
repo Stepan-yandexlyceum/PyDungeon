@@ -228,27 +228,7 @@ class Board_Inventory:
         if self.selected_cell != ("", "") and self.board[self.selected_cell[0]][self.selected_cell[1]] != "":
             return self.board[self.selected_cell[0]][self.selected_cell[1]]
         return ""
-
-
-class Button:
-    def __init__(self, x, y, height, width, text):
-        self.x = x
-        self.y = y
-        self.height = height
-        self.width = width
-        self.text = text
-
-    def draw(self):
-        pygame.draw.rect(sc, (255, 255, 255), (self.x, self.y, self.height, self.width), width=1)
-
-        font = pygame.font.Font(None, self.width)
-        text = font.render(self.text, True, (255, 255, 255))
-        sc.blit(text, (self.x + 5, self.y + 5))
-
-    def push_button(self, pos):
-        if pos[0] > self.x and pos[0] < self.x + self.height and pos[1] > self.y and pos[1] < self.y + self.width:
-            return True
-
+        
 
 def draw_player_in_inventory():
     hero_in_inventory = pygame.sprite.Sprite()

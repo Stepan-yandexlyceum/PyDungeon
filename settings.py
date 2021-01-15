@@ -13,3 +13,5 @@ TILE = 100
 
 map_width = 13
 map_height = 13
+
+killed_monsters = 0
